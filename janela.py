@@ -6,20 +6,43 @@ from tkinter import *
 import customtkinter
 from PIL import Image, ImageTk
 
-# conexao
-# conexao = sqlite3.connect('banco_data.db')
-# c = conexao.cursor()
-#
-# c.execute('''CREATE TABLE Client(
-#     "id" integer,
-#     "user" text,
-#     "pass" text
-#     )
-# ''')
-#
-# conexao.commit()
 
-# conexao.close()
+
+def fazer_login():
+    print("Fazer Login")
+    print("Cadastrar")
+    conexao = sqlite3.connect('banco_data.db')
+    c = conexao.cursor()
+
+    c.execute(" GET INTO Client VALUES (:user, :senha)",
+              {
+                  'user': user.get(),
+                  'senha': senha.get()
+              }
+              )
+    conexao.commit()
+    conexao.close()
+
+    user.delete(0,"end")
+    senha.delete(0,"end")
+
+def cadastrar():
+    print("Cadastrar")
+    conexao = sqlite3.connect('banco_data.db')
+    c = conexao.cursor()
+
+    c.execute(" INSERT INTO Client VALUES (:user, :senha)",
+              {
+                'user':user.get(),
+                'senha':senha.get()
+              }
+              )
+    conexao.commit()
+    conexao.close()
+    user.delete(0, "end")
+    senha.delete(0, "end")
+
+
 customtkinter.set_appearance_mode("light")
 customtkinter.set_default_color_theme("theme\light.json")
 
@@ -30,8 +53,6 @@ login.configure(background='black')
 login.resizable(False, False)
 
 
-def clique():
-    print("Fazer Login")
 
 
 img = customtkinter.CTkImage(Image.open("img\login.png"), size=(300, 300))
@@ -82,10 +103,10 @@ senha.grid(column=1, row=4, padx=10, pady=0)
 checkbox = customtkinter.CTkCheckBox(login, text="Lembrar Login", font= ('poppins medium', 13), checkbox_width=15, checkbox_height=15)
 checkbox.grid(column=1, row=5, padx=10, pady=0, )
 
-botao_login = customtkinter.CTkButton(login, text="Login", command=clique, width=100, height=30, fg_color="#0A50FF")
+botao_login = customtkinter.CTkButton(login, text="Login", command=fazer_login, width=100, height=30, fg_color="#0A50FF")
 botao_login.grid(column=1, row=6, padx=10, pady=0, sticky=W)
 
-botao_cadastro = customtkinter.CTkButton(login, text="Cadastrar-se", command=clique,
+botao_cadastro = customtkinter.CTkButton(login, text="Cadastrar-se", command=cadastrar,
                                          width=60,
                                          height=30,
                                          fg_color="#0Aa0cc")
