@@ -1,11 +1,9 @@
-import tkinter
-
 import sqlite3
-import pandas as pd
-from tkinter import *
+import tkinter
 import customtkinter
-from PIL import Image, ImageTk
 import subprocess
+from tkinter import *
+from PIL import Image, ImageTk
 
 
 def fazer_login():
@@ -37,6 +35,7 @@ def fazer_login():
     user.delete(0, "end")
     senha.delete(0, "end")
 
+
 def cadastro():
     login.destroy()
     subprocess.run(['python', 'cadastro.py'])
@@ -51,7 +50,7 @@ login.geometry('640x360+300+200')
 login.configure(background='black')
 login.resizable(False, False)
 
-img = customtkinter.CTkImage(Image.open("img\login.png"), size=(300, 300))
+img = customtkinter.CTkImage(Image.open("img/login.png"), size=(300, 300))
 
 button = customtkinter.CTkLabel(master=login, image=img, text="", )
 button.grid(column=0, row=0, rowspan=8, padx=50, pady=20)
@@ -99,9 +98,9 @@ botao_login.grid(column=1, row=6, padx=0, pady=0)
 
 texto_cadastro = customtkinter.CTkLabel(login, text="     É novo por aqui?",
                                         font=('poppins medium', 12),
-                                         text_color="gray50",
-                                         fg_color="white",
-                                         )
+                                        text_color="gray50",
+                                        fg_color="white",
+                                        )
 texto_cadastro.grid(column=1, row=7, padx=0, pady=0, sticky=W)
 
 botao_cadastro = customtkinter.CTkButton(login, text="Cadastre-se      ", command=cadastro,

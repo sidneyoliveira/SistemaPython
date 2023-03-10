@@ -1,8 +1,10 @@
 import sqlite3
-from tkinter import *
+import tkinter
 import customtkinter
-from PIL import Image, ImageTk
 import subprocess
+from tkinter import *
+from PIL import Image, ImageTk
+
 
 
 def fazer_login():
