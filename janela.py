@@ -7,15 +7,6 @@ import customtkinter
 from PIL import Image, ImageTk
 
 
-def execute_read_query(connection, query):
-    cursor = connection.cursor()
-    result = None
-
-    cursor.execute(query)
-    result = cursor.fetchall()
-    return result
-
-
 def fazer_login():
     print("Fazer Login")
 
@@ -48,6 +39,13 @@ def fazer_login():
 
 def cadastrar():
     print("Cadastrar")
+    if user.get() == senha.get():
+
+        user.delete(0, "end")
+        senha.delete(0, "end")
+        return
+
+
     conexao = sqlite3.connect('banco_data.db')
     c = conexao.cursor()
 
@@ -91,10 +89,10 @@ usertitle = customtkinter.CTkLabel(login, text="Email",
 usertitle.place(x=420, y=70)
 
 user = customtkinter.CTkEntry(login, placeholder_text="Seu Email",
-                              width=180, height=40,
+                              width=200, height=40,
                               border_width=2,
                               border_color='#dddddd',
-                              corner_radius=30,
+                              corner_radius=10,
                               )
 
 user.grid(column=1, row=2, padx=10, pady=0)
@@ -107,25 +105,25 @@ senhatitle = customtkinter.CTkLabel(login, text="Senha",
 senhatitle.place(x=420, y=150)
 
 senha = customtkinter.CTkEntry(login, placeholder_text="Sua Senha", show="*",
-                               width=180, height=40,
+                               width=200, height=40,
                                border_width=2,
                                border_color='#dddddd',
-                               corner_radius=30)
+                               corner_radius=10)
 
 senha.grid(column=1, row=4, padx=10, pady=0)
 
-checkbox = customtkinter.CTkCheckBox(login, text="Lembrar Login", font=('poppins medium', 13), checkbox_width=15,
-                                     checkbox_height=15)
-checkbox.grid(column=1, row=5, padx=10, pady=0, )
-
-botao_login = customtkinter.CTkButton(login, text="Login", command=fazer_login, width=100, height=30,
+botao_login = customtkinter.CTkButton(login, text="Login", command=fazer_login, width=200, height=30,
                                       fg_color="#0A50FF")
-botao_login.grid(column=1, row=6, padx=10, pady=0, sticky=W)
+botao_login.grid(column=1, row=6, padx=0, pady=0)
 
-botao_cadastro = customtkinter.CTkButton(login, text="Cadastrar-se", command=cadastrar,
+botao_cadastro = customtkinter.CTkButton(login, text="É novo por aqui? Cadastre-se", command=cadastrar,
                                          width=60,
-                                         height=30,
-                                         fg_color="#0Aa0cc")
-botao_cadastro.grid(column=1, row=6, padx=0, pady=0, sticky=E)
+                                         height=10,
+                                         text_color="gray50",
+                                         text_color_disabled= "gray10",
+                                         fg_color="white",
+                                         hover_color="white"
+                                         )
+botao_cadastro.grid(column=1, row=7, padx=0, pady=0)
 
 login.mainloop()
