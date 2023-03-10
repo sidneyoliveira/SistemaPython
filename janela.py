@@ -4,8 +4,9 @@ import sqlite3
 import pandas as pd
 from tkinter import *
 import customtkinter
-from PIL import Image
+from PIL import Image, ImageTk
 
+# conexao
 # conexao = sqlite3.connect('banco_data.db')
 # c = conexao.cursor()
 #
