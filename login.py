@@ -38,6 +38,10 @@ def fazer_login():
     user.delete(0, "end")
     senha.delete(0, "end")
 
+def theme():
+    customtkinter.set_appearance_mode("dark")
+    customtkinter.set_default_color_theme("blue_dark")
+
 
 def cadastro():
     login.destroy()
@@ -95,7 +99,7 @@ senha = customtkinter.CTkEntry(login, placeholder_text="Sua Senha", show="*",
 
 senha.grid(column=1, row=4, padx=10, pady=0)
 
-botao_login = customtkinter.CTkButton(login, text="Login", command = fazer_login, width=200, height=30,
+botao_login = customtkinter.CTkButton(login, text="Login", command = theme, width=200, height=30,
                                       fg_color="#0A50FF")
 botao_login.grid(column=1, row=6, padx=0, pady=0)
 

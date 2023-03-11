@@ -39,7 +39,7 @@ def fazer_login():
 
 
 def cadastro():
-    login.destroy()
+    index.destroy()
     subprocess.run(['python', '../cadastro.py'])
 
 
@@ -48,31 +48,31 @@ customtkinter.set_appearance_mode("light")
 TEMA = "theme/light.json"
 customtkinter.set_default_color_theme(TEMA)
 
-login = customtkinter.CTk()
-login.title("Sistema Python")
-login.geometry('640x360+300+200')
-login.configure(background='black')
-login.resizable(False, False)
+index = customtkinter.CTk()
+index.title("Sistema Python")
+index.geometry("{0}x{1}+0+0".format(index.winfo_screenwidth(), index.winfo_screenheight()))
+index.configure(background='black')
+
 
 img = customtkinter.CTkImage(Image.open("img/login.png"), size=(300, 300))
 
-button = customtkinter.CTkLabel(master=login, image=img, text="", )
+button = customtkinter.CTkLabel(master=index, image=img, text="", )
 button.grid(column=0, row=0, rowspan=8, padx=50, pady=20)
 
-texto = customtkinter.CTkLabel(login, text="Area de Trabalho:",
+texto = customtkinter.CTkLabel(index, text="Area de Trabalho:",
                                font=('poppins medium', 25),
                                text_color="#3F84CB",
                                compound='left')
 texto.grid(column=1, row=0, rowspan=1, padx=10, pady=0, sticky=W, )
 
-usertitle = customtkinter.CTkLabel(login, text="Email",
+usertitle = customtkinter.CTkLabel(index, text="Email",
                                    font=('poppins medium', 15),
                                    text_color="#3F84CB",
                                    )
 
 usertitle.place(x=420, y=70)
 
-user = customtkinter.CTkEntry(login, placeholder_text="Seu Email",
+user = customtkinter.CTkEntry(index, placeholder_text="Seu Email",
                               width=200, height=40,
                               border_width=2,
                               border_color='#dddddd',
@@ -81,14 +81,14 @@ user = customtkinter.CTkEntry(login, placeholder_text="Seu Email",
 
 user.grid(column=1, row=2, padx=10, pady=0)
 
-senhatitle = customtkinter.CTkLabel(login, text="Senha",
+senhatitle = customtkinter.CTkLabel(index, text="Senha",
                                     font=('poppins medium', 15),
                                     text_color="#3F84CB",
                                     compound='bottom')
 
 senhatitle.place(x=420, y=150)
 
-senha = customtkinter.CTkEntry(login, placeholder_text="Sua Senha", show="*",
+senha = customtkinter.CTkEntry(index, placeholder_text="Sua Senha", show="*",
                                width=200, height=40,
                                border_width=2,
                                border_color='#dddddd',
@@ -96,18 +96,18 @@ senha = customtkinter.CTkEntry(login, placeholder_text="Sua Senha", show="*",
 
 senha.grid(column=1, row=4, padx=10, pady=0)
 
-botao_login = customtkinter.CTkButton(login, text="Login", command=fazer_login, width=200, height=30,
+botao_login = customtkinter.CTkButton(index, text="Login", command=fazer_login, width=200, height=30,
                                       fg_color="#0A50FF")
 botao_login.grid(column=1, row=6, padx=0, pady=0)
 
-texto_cadastro = customtkinter.CTkLabel(login, text="     É novo por aqui?",
+texto_cadastro = customtkinter.CTkLabel(index, text="     É novo por aqui?",
                                         font=('poppins medium', 12),
                                         text_color="gray50",
                                         fg_color="white",
                                         )
 texto_cadastro.grid(column=1, row=7, padx=0, pady=0, sticky=W)
 
-botao_cadastro = customtkinter.CTkButton(login, text="Cadastre-se      ", command=cadastro,
+botao_cadastro = customtkinter.CTkButton(index, text="Cadastre-se      ", command=cadastro,
                                          width=60,
                                          height=10,
                                          font=('poppins medium', 12),
@@ -117,4 +117,4 @@ botao_cadastro = customtkinter.CTkButton(login, text="Cadastre-se      ", comman
                                          )
 botao_cadastro.grid(column=1, row=7, padx=0, pady=0, sticky=E)
 
-login.mainloop()
+index.mainloop()
