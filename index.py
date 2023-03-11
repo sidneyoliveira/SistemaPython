@@ -3,7 +3,9 @@ import tkinter
 import customtkinter
 import subprocess
 from tkinter import *
-from PIL import Image
+from PIL import Image, ImageTk
+
+
 
 
 def fazer_login():
@@ -23,11 +25,8 @@ def fazer_login():
     print(resultado)
 
     if resultado:
-        login.destroy()
-        subprocess.run(['python', 'index.py'])
+        tkinter.messagebox.showinfo('Sistema Python', "Bem-vindo!")
         return True
-    # tkinter.messagebox.showinfo('Sistema Python', "Bem-vindo!")
-
     else:
         tkinter.messagebox.showinfo('Sistema Python', "Usuário ou senha incorretos.")
         return False
@@ -41,11 +40,13 @@ def fazer_login():
 
 def cadastro():
     login.destroy()
-    subprocess.run(['python', 'cadastro.py'])
+    subprocess.run(['python', '../cadastro.py'])
 
 
 customtkinter.set_appearance_mode("light")
-customtkinter.set_default_color_theme("theme/light.json")
+
+TEMA = "theme/light.json"
+customtkinter.set_default_color_theme(TEMA)
 
 login = customtkinter.CTk()
 login.title("Sistema Python")
@@ -58,7 +59,7 @@ img = customtkinter.CTkImage(Image.open("img/login.png"), size=(300, 300))
 button = customtkinter.CTkLabel(master=login, image=img, text="", )
 button.grid(column=0, row=0, rowspan=8, padx=50, pady=20)
 
-texto = customtkinter.CTkLabel(login, text="Faça seu Login:",
+texto = customtkinter.CTkLabel(login, text="Area de Trabalho:",
                                font=('poppins medium', 25),
                                text_color="#3F84CB",
                                compound='left')
@@ -95,7 +96,7 @@ senha = customtkinter.CTkEntry(login, placeholder_text="Sua Senha", show="*",
 
 senha.grid(column=1, row=4, padx=10, pady=0)
 
-botao_login = customtkinter.CTkButton(login, text="Login", command = fazer_login, width=200, height=30,
+botao_login = customtkinter.CTkButton(login, text="Login", command=fazer_login, width=200, height=30,
                                       fg_color="#0A50FF")
 botao_login.grid(column=1, row=6, padx=0, pady=0)
 
