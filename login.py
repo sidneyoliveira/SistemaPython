@@ -4,6 +4,8 @@ import customtkinter
 import subprocess
 from tkinter import *
 from PIL import Image
+import ctypes
+
 
 
 def fazer_login():
@@ -48,8 +50,8 @@ def cadastro():
     subprocess.run(['python', 'cadastro.py'])
 
 
-customtkinter.set_appearance_mode("light")
-customtkinter.set_default_color_theme("theme/light.json")
+customtkinter.set_appearance_mode("dark")
+customtkinter.set_default_color_theme("dark-blue")
 
 login = customtkinter.CTk()
 login.title("Sistema Python")
@@ -99,7 +101,7 @@ senha = customtkinter.CTkEntry(login, placeholder_text="Sua Senha", show="*",
 
 senha.grid(column=1, row=4, padx=10, pady=0)
 
-botao_login = customtkinter.CTkButton(login, text="Login", command = theme, width=200, height=30,
+botao_login = customtkinter.CTkButton(login, text="Login", command=fazer_login, width=200, height=30,
                                       fg_color="#0A50FF")
 botao_login.grid(column=1, row=6, padx=0, pady=0)
 

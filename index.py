@@ -1,9 +1,13 @@
+from logging import root
+
 import sqlite3
 import tkinter
 import customtkinter
 import subprocess
 from tkinter import *
 from PIL import Image, ImageTk
+
+
 
 
 
@@ -50,27 +54,30 @@ customtkinter.set_default_color_theme(TEMA)
 
 index = customtkinter.CTk()
 index.title("Sistema Python")
-index.geometry("{0}x{1}+0+0".format(index.winfo_screenwidth(), index.winfo_screenheight()))
-index.configure(background='black')
+
+largura_tela = index.winfo_screenwidth()
+altura_tela = index.winfo_screenheight()
+
+index.geometry("{0}x{1}+0+0".format(largura_tela, altura_tela))
 
 
-img = customtkinter.CTkImage(Image.open("img/login.png"), size=(300, 300))
+menu_abas = customtkinter.CTkFrame(index, bg_color="gray50", width= largura_tela, height= 120)
+menu_abas.grid(column=0, row=0,padx=0, pady=0 )
 
-button = customtkinter.CTkLabel(master=index, image=img, text="", )
-button.grid(column=0, row=0, rowspan=8, padx=50, pady=20)
+
 
 texto = customtkinter.CTkLabel(index, text="Area de Trabalho:",
                                font=('poppins medium', 25),
                                text_color="#3F84CB",
                                compound='left')
-texto.grid(column=1, row=0, rowspan=1, padx=10, pady=0, sticky=W, )
+texto.grid(column=1, row=1, rowspan=1, padx=10, pady=0, sticky=W, )
 
-usertitle = customtkinter.CTkLabel(index, text="Email",
-                                   font=('poppins medium', 15),
-                                   text_color="#3F84CB",
-                                   )
-
-usertitle.place(x=420, y=70)
+# usertitle = customtkinter.CTkLabel(index, text="Email",
+#                                    font=('poppins medium', 15),
+#                                    text_color="#3F84CB",
+#                                    )
+#
+# usertitle.place(x=420, y=70)
 
 user = customtkinter.CTkEntry(index, placeholder_text="Seu Email",
                               width=200, height=40,
@@ -80,13 +87,13 @@ user = customtkinter.CTkEntry(index, placeholder_text="Seu Email",
                               )
 
 user.grid(column=1, row=2, padx=10, pady=0)
-
-senhatitle = customtkinter.CTkLabel(index, text="Senha",
-                                    font=('poppins medium', 15),
-                                    text_color="#3F84CB",
-                                    compound='bottom')
-
-senhatitle.place(x=420, y=150)
+#
+# senhatitle = customtkinter.CTkLabel(index, text="Senha",
+#                                     font=('poppins medium', 15),
+#                                     text_color="#3F84CB",
+#                                     compound='bottom')
+#
+# senhatitle.place(x=420, y=150)
 
 senha = customtkinter.CTkEntry(index, placeholder_text="Sua Senha", show="*",
                                width=200, height=40,
@@ -116,5 +123,11 @@ botao_cadastro = customtkinter.CTkButton(index, text="Cadastre-se      ", comman
                                          hover_color="white"
                                          )
 botao_cadastro.grid(column=1, row=7, padx=0, pady=0, sticky=E)
+menu_abas = customtkinter.CTkFrame(index, bg_color="gray50", width= largura_tela, height= 120)
+menu_abas.place(x=50, y=50 )
+
+img = customtkinter.CTkImage(Image.open("img/fundo.jpg"), size=(largura_tela, (altura_tela-100)))
+button = customtkinter.CTkLabel(master=index, image=img, text="", )
+button.place(x=100, y=100)
 
 index.mainloop()
