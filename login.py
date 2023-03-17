@@ -50,8 +50,8 @@ def cadastro():
     subprocess.run(['python', 'cadastro.py'])
 
 
-customtkinter.set_appearance_mode("dark")
-customtkinter.set_default_color_theme("dark-blue")
+customtkinter.set_appearance_mode("light")
+customtkinter.set_default_color_theme("theme/light.json")
 
 login = customtkinter.CTk()
 login.title("Sistema Python")
