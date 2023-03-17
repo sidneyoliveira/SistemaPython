@@ -5,6 +5,7 @@ import subprocess
 from tkinter import *
 from PIL import Image
 import ctypes
+import pip
 
 
 
