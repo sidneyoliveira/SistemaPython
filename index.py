@@ -1,16 +1,28 @@
 from logging import root
-
+from tkinter import filedialog
 import sqlite3
 import tkinter
 import customtkinter
 import subprocess
 from tkinter import *
 from PIL import Image, ImageTk
+import pandas as pd
 
 
 
 
 
+file_location = filedialog.askopenfilename(title="Selecione o arquivo XLS",
+                                          filetypes= (("xls files","*.xls"),
+                                          ))
+print(file_location)
+file = xlrd.open_workbook(file_location)
+print(file)
+plan = file.sheet_by_name('dados')
+print(plan)
+
+x = plan.col.value(0)
+y = plan.col.value(1)
 
 def fazer_login():
     print("Fazer Login")
@@ -44,7 +56,7 @@ def fazer_login():
 
 def cadastro():
     index.destroy()
-    subprocess.run(['python', '../cadastro.py'])
+    subprocess.run(['python', 'cadastro.py'])
 
 
 customtkinter.set_appearance_mode("light")
@@ -114,7 +126,7 @@ texto_cadastro = customtkinter.CTkLabel(index, text="     É novo por aqui?",
                                         )
 texto_cadastro.grid(column=1, row=7, padx=0, pady=0, sticky=W)
 
-botao_cadastro = customtkinter.CTkButton(index, text="Cadastre-se      ", command=cadastro,
+botao_cadastro = customtkinter.CTkButton(index, text="Cadastre-se      ", command=openFile,
                                          width=60,
                                          height=10,
                                          font=('poppins medium', 12),
@@ -122,11 +134,11 @@ botao_cadastro = customtkinter.CTkButton(index, text="Cadastre-se      ", comman
                                          fg_color="white",
                                          hover_color="white"
                                          )
-botao_cadastro.grid(column=1, row=7, padx=0, pady=0, sticky=E)
+botao_cadastro.grid(column=0, row=0, padx=0, pady=0, sticky=E)
 menu_abas = customtkinter.CTkFrame(index, bg_color="gray50", width= largura_tela, height= 120)
 menu_abas.place(x=50, y=50 )
 
-img = customtkinter.CTkImage(Image.open("img/fundo.jpg"), size=(largura_tela, (altura_tela-100)))
+img = customtkinter.CTkImage(Image.open("img/login.png"), size=(largura_tela, (altura_tela-100)))
 button = customtkinter.CTkLabel(master=index, image=img, text="", )
 button.place(x=100, y=100)
 
