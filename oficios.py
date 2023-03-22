@@ -4,16 +4,23 @@ import requests
 from bs4 import BeautifulSoup
 from docx import Document
 from pdfminer.high_level import extract_pages, extract_text
+from tkinter import filedialog
+import sqlite3
+import tkinter
+import customtkinter
+import subprocess
+from tkinter import *
+from PIL import Image, ImageTk
 
+class CustomButton(customtkinter.CTkButton):
+    def __init__(self, master, **kw):
+        customtkinter.CTkButton.__init__(self, master=master, **kw)
+    def return_value(self, value):
+        self.master.return_value = value
 
-
-# Verifica se o arquivo PDF existe
-if not os.path.exists("mapa.pdf"):
-    print("Arquivo PDF não encontrado.")
-    exit()
 
 # Extrai texto do arquivo PDF PAGINA 1
-pag1 = extract_text("mapa.pdf", page_numbers=[0])
+pag1 = extract_text(url_pdf, page_numbers=[0])
 
 # Divide o texto em linhas
 linhas = pag1.split("\n")
@@ -29,6 +36,7 @@ try:
     num = linhas[5].split(" ")[1]
     print(num)
 
+    # Extrai a data do processo da linha de índice 5
     data = linhas[5].split(" ")[4]
     dia = data.split('/')[0]
     mes = data.split('/')[1]
@@ -52,23 +60,36 @@ try:
 except Exception as e:
     print("Erro: " + str(e))
 
+#Função para extrair dados do cnpj
+def dados_cnpj():
+    cnpj_input = input('Qual CNPJ?')
+    data = input('Qual a Data?')
+    url = f'https://cnpj.biz/{cnpj_input}'
+    response = requests.get(url)
+    content = response.content
+    dados_cnpj = BeautifulSoup(content, 'html.parser')
+    dados_cnpj = dados_cnpj.findAll('b', attrs={'class': 'copy'})
+    cnpj = dados_cnpj[0].text
+    razao = dados_cnpj[2].text
+    return cnpj, razao, data
 
-# Substitua o valor abaixo pelo CNPJ que deseja consultar
-cnpj_input = input('Qual CNPJ?')
+empresa1 = dados_cnpj()
+cnpj1 = empresa1[0]
+razao1 = empresa1[1]
+data1 = empresa1[2]
 
-# Faz a solicitação HTTP para a API
-url = f'https://cnpj.biz/{cnpj_input}'
+print(cnpj1)
+print(razao1)
 
-response = requests.get(url)
-content = response.content
+empresa2 = dados_cnpj()
+cnpj2 = empresa2[0]
+razao2 = empresa2[1]
+data2 = empresa2[2]
 
-dados_cnpj = BeautifulSoup(content, 'html.parser')
-dados_cnpj = dados_cnpj.findAll('b', attrs={'class': 'copy'})
-
-cnpj = dados_cnpj[0].text
-razao = dados_cnpj[2].text
-print(cnpj)
-print(razao)
+empresa3 = dados_cnpj()
+cnpj3 = empresa3[0]
+razao3 = empresa3[1]
+data3 = empresa3[2]
 
 
 numoficio = f'{dia}' + f'{mes}' + '-0001.' + f'{ano}'
@@ -99,15 +120,15 @@ p2.alignment = docx.enum.text.WD_ALIGN_PARAGRAPH.JUSTIFY
 table = doc.tables[0]
 
 referencias = {
-    "CNPJ1": f'{cnpj[0]}',
-    "CNPJ2": f'{cnpj[1]}',
-    "CNPJ3": f'{cnpj[2]}',
-    "RAZAO1": f'{razao[0]}',
-    "RAZAO2": f'{razao[1]}',
-    "RAZAO3": f'{razao[2]}',
-    "DATA1": f'{data}',
-    "DATA2": f'{data}',
-    "DATA3": f'{data}',
+    "CNPJ1": f'{cnpj1}',
+    "CNPJ2": f'{cnpj2}',
+    "CNPJ3": f'{cnpj3}',
+    "RAZAO1": f'{razao1}',
+    "RAZAO2": f'{razao2}',
+    "RAZAO3": f'{razao3}',
+    "DATA1": f'{data1}',
+    "DATA2": f'{data2}',
+    "DATA3": f'{data3}',
 
 }
 for i in range(len(table.rows)):
@@ -118,17 +139,14 @@ for i in range(len(table.rows)):
                 for codigo in referencias:
                     valor = referencias[codigo]
                     new_text = run.text.replace(codigo, valor)
-                    run.text = new_text
+                    run.text = new_text.upper()
 
 for para in doc.paragraphs:
     for run in para.runs:
         run.font.name = 'Calibri Light'
 
 
-doc.save('OFICIO ' + f'{numoficio}' + ' - ' + f'{titulo}' + '.docx')
-
-
-
+doc.save(f'{numoficio}' + ' - ' + f'{titulo}' + '.docx')
 
 
 # records = (

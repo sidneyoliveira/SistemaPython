@@ -1,46 +1,39 @@
-from docx import Document
-from docx.shared import RGBColor, Pt, Cm
-from docx.enum.table import WD_TABLE_ALIGNMENT, WD_CELL_VERTICAL_ALIGNMENT
-from docx.oxml import OxmlElement
-from docx.oxml.ns import qn
+import tkinter as tk
 
-def set_table_border(table, border_style="dashDot", border_width=6, border_color=(255, 0, 0)):
-    """
-    Define o estilo, a largura e a cor das bordas da tabela.
-    """
-    table.style = 'Table Grid'
-    tblPr = table._element.xpath('.//w:tblPr')[0]
-    tblBorders = OxmlElement('w:tblBorders')
-    for edge in ('w:top', 'w:left', 'w:bottom', 'w:right', 'w:insideH', 'w:insideV'):
-        element = OxmlElement(edge)
-        element.set(qn('w:val'), border_style)
-        element.set(qn('w:sz'), str(border_width))
-        element.set(qn('w:color'), '#{:02X}{:02X}{:02X}'.format(*border_color))
-        tblBorders.append(element)
-    tblPr.append(tblBorders)
+import customtkinter
 
-# cria o documento
-document = Document()
 
-# cria a tabela
-table = document.add_table(rows=3, cols=3, style='Table Grid')
+class CustomButton(customtkinter.CTkButton):
+    def __init__(self, master, **kw):
+        customtkinter.CTkButton.__init__(self, master=master, **kw)
+    def return_value(self, value):
+        self.master.return_value = value
+        self.master.destroy()
 
-# define o estilo da tabela
-set_table_border(table, border_style='dashDot', border_width=6, border_color=(255, 0, 0))
+def get_user_input():
+    root = tk.Tk()
+    root.geometry("200x100")
+    root.title("Input Demo")
 
-# preenche a tabela com conteúdo
-for i in range(3):
-    row = table.rows[i]
-    row.cells[0].text = 'Texto {}'.format(i + 1)
-    row.cells[1].text = 'Texto {}'.format(i + 4)
-    row.cells[2].text = 'Texto {}'.format(i + 7)
+    # Definindo a função que será executada quando o botão for clicado
+    def on_button_click():
+        custom_button.return_value(entry.get())
 
-# define o estilo do conteúdo da tabela
-for row in table.rows:
-    for cell in row.cells:
-        cell.vertical_alignment = WD_CELL_VERTICAL_ALIGNMENT.CENTER
-        cell.paragraphs[0].runs[0].font.color.rgb = RGBColor(255, 0, 0)
-        cell.paragraphs[0].runs[0].font.size = Pt(12)
+    # Criando a entrada e o botão personalizado
+    entry = tk.Entry(root)
+    entry.pack(pady=10)
+    custom_button = CustomButton(root, text="OK", command=on_button_click)
+    custom_button.pack(pady=10)
 
-# salva o documento
-document.save('tabela.docx')
+    # Iniciando a janela principal e esperando pelo retorno de valor
+    root.return_value = None
+    root.mainloop()
+
+    # Retornando o valor após a janela ser fechada
+    return root.return_value
+
+# Chamando a função para obter entrada do usuário
+user_input = get_user_input()
+
+# Exibindo a entrada do usuário salva em uma variável fora da função
+print("O usuário digitou:", user_input)
