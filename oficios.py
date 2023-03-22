@@ -1,23 +1,22 @@
-import re
-
+import os
 import docx
-import tabula
-from tabula.io import read_pdf
-import pandas as pd
-from IPython.core.display_functions import display
-from pdfminer.high_level import extract_pages, extract_text
 import requests
 from bs4 import BeautifulSoup
 from docx import Document
+from pdfminer.high_level import extract_pages, extract_text
 
 
 dia = "17"
 mes = "03"
 ano = "2023"
 
-# Extrai texto do arquivo PDF PAGINA 1
+# Verifica se o arquivo PDF existe
+if not os.path.exists("mapa.pdf"):
+    print("Arquivo PDF não encontrado.")
+    exit()
 
-pag1= extract_text("mapa.pdf", page_numbers=[0])
+# Extrai texto do arquivo PDF PAGINA 1
+pag1 = extract_text("mapa.pdf", page_numbers=[0])
 
 # Divide o texto em linhas
 linhas = pag1.split("\n")
@@ -45,7 +44,7 @@ try:
     descricao.remove('ESPECIFICAÇÃO:')
     descricao = " ".join(descricao)
     descricao = descricao.replace('  ', ' ')
-    print(descricao+"\n")
+    print(descricao + "\n")
 
 except Exception as e:
     print("Erro: " + str(e))
@@ -74,78 +73,99 @@ numoficio = f'{dia}' + f'{mes}' + '-0001.' + f'{ano}'
 data = f'{dia}' + '/' + f'{mes}' + '/' + f'{ano}'
 
 
-doc = Document("oficio1.docx")
+doc = Document('oficio1.docx')
 
 p = doc.add_paragraph('Oficio nº ')
 p.add_run(numoficio).bold = True
-p.add_run(' - LICITAÇÃO \t\t\t\t\t\t\t')
+p.add_run(' - LICITAÇÃO \t\t\t\t\t')
 
 p.add_run('ITAREMA-CE, ')
-p.add_run(data + '\n').bold = True
+p.add_run(data + '\n\n').bold = True
 
 doc.add_paragraph('INEZ Helena Braga')
-doc.add_paragraph('Presidente da Comissão de Licitação\n')
+doc.add_paragraph('Presidente da Comissão de Licitação\n\n')
 
-p2 = doc.add_paragraph('\t\tConsiderando a realização de pesquisa de preço via e-mail junto ao sistema de cotação pública aCotação processo nº: ')
+p2 = doc.add_paragraph(
+    '\t\tConsiderando a realização de pesquisa de preço via e-mail junto ao sistema de cotação pública aCotação processo nº: ')
 p2.add_run(num).bold = True
 p2.add_run(' para: ')
 p2.add_run(descricao).bold = True
-p2.add_run(' , encaminha-se ao Setor de Licitação as respectivas propostas juntamente com o mapa de preço médio e comprovações junto ao TCE/CE para providências cabíveis quanto ao seguimento do processo licitatório.\n')
+p2.add_run(' , encaminha-se ao Setor de Licitação as respectivas propostas juntamente com o mapa de preço médio e comprovações junto ao TCE/CE para providências cabíveis quanto ao seguimento do processo licitatório.\t\t\n')
 
 p2.alignment = docx.enum.text.WD_ALIGN_PARAGRAPH.JUSTIFY
 
-records = (
-    ('1', f'{cnpj}', f'{razao}', 'E-MAIL – SISTEMA aCotação', '10/03/2023', '60 DIAS'),
-    ('2', f'{cnpj}', f'{razao}', 'E-MAIL – SISTEMA aCotação', '10/03/2023', '60 DIAS'),
-    ('3', f'{cnpj}', f'{razao}', 'E-MAIL – SISTEMA aCotação', '10/03/2023', '60 DIAS')
-)
 
-table = doc.add_table(rows=1, cols=6)
-hdr_cells = table.rows[0].cells
-hdr_cells[0].text = 'ITEM'
-hdr_cells[1].text = 'CNPJ/CPF'
-hdr_cells[2].text = 'EMPRESA'
-hdr_cells[3].text = 'MÉTODO'
-hdr_cells[4].text = 'DATA DA PROPOSTA'
-hdr_cells[5].text = 'VALIDADE'
+table = doc.tables[0]
 
-for item, cnpj, empresa, método, data, validade  in records:
-    row_cells = table.add_row().cells
-    row_cells[0].text = item
-    row_cells[1].text = cnpj
-    row_cells[2].text = empresa
-    row_cells[3].text = método
-    row_cells[4].text = data
-    row_cells[5].text = validade
+referencias = {
+    "CNPJ1": f'{cnpj}',
+    "CNPJ2": f'{cnpj}',
+    "CNPJ3": f'{cnpj}',
+    "RAZAO1": f'{razao}',
+    "RAZAO2": f'{razao}',
+    "RAZAO3": f'{razao}',
+    "DATA1": f'{data}',
+    "DATA2": f'{data}',
+    "DATA3": f'{data}',
 
-for row in table.rows:
-    for cell in row.cells:
+}
+for i in range(len(table.rows)):
+    for j in range(len(table.columns)):
+        cell = table.cell(i, j)
         for paragraph in cell.paragraphs:
             for run in paragraph.runs:
-                run.font.color.rgb = docx.shared.RGBColor(255, 0, 0)
+                for codigo in referencias:
+                    valor = referencias[codigo]
+                    new_text = run.text.replace(codigo, valor)
+                    run.text = new_text
+
+for para in doc.paragraphs:
+    for run in para.runs:
+        run.font.name = 'Calibri Light'
 
 
-doc.add_paragraph('Atenciosamente,\n\n\n')
-doc.add_paragraph('Presidente da Comissão de Licitação\n')
+doc.save('OFICIO ' + f'{numoficio}' + ' - ' + f'{titulo}' + '.docx')
 
 
+
+
+
+# records = (
+#     ('1', f'{cnpj}', f'{razao}', 'E-MAIL – SISTEMA aCotação', '10/03/2023', '60 DIAS'),
+#     ('2', f'{cnpj}', f'{razao}', 'E-MAIL – SISTEMA aCotação', '10/03/2023', '60 DIAS'),
+#     ('3', f'{cnpj}', f'{razao}', 'E-MAIL – SISTEMA aCotação', '10/03/2023', '60 DIAS')
+# )
+#
+# table = doc.add_table(rows=1, cols=6)
+# hdr_cells = table.rows[0].cells
+# hdr_cells[0].text = 'ITEM'
+# hdr_cells[1].text = 'CNPJ/CPF'
+# hdr_cells[2].text = 'EMPRESA'
+# hdr_cells[3].text = 'MÉTODO'
+# hdr_cells[4].text = 'DATA DA PROPOSTA'
+# hdr_cells[5].text = 'VALIDADE'
+#
+# for item, cnpj, empresa, método, data, validade  in records:
+#     row_cells = table.add_row().cells
+#     row_cells[0].text = item
+#     row_cells[1].text = cnpj
+#     row_cells[2].text = empresa
+#     row_cells[3].text = método
+#     row_cells[4].text = data
+#     row_cells[5].text = validade
+#
+#
 # referencias = {
-#     "NUMOFICIO": numoficio,
-#     "TITULO": titulo,
-#     "DIA1": data,
-#     "NUMPROCESSO": num,
-#     "DESCRICAO": descricao,
+#     "CNPJ1": cnpj,
+#     "CNPJ2": cnpj,
+#     "CNPJ3": cnpj,
+#     "RAZAO1": razao,
+#     "RAZAO2": razao,
+#     "RAZAO3": razao,
+#
 # }
 #
 # for paragrafo in doc.paragraphs:
 #     for codigo in referencias:
 #         valor = referencias[codigo]
 #         paragrafo.text = paragrafo.text.replace(codigo, valor)
-
-# for para in doc.paragraphs:
-#     for run in para.runs:
-#         run.font.name = 'Calibri Light'
-
-
-doc.save('OFICIO ' + f'{numoficio}' + ' - ' + f'{titulo}' + '.docx')
-
