@@ -6,9 +6,6 @@ from docx import Document
 from pdfminer.high_level import extract_pages, extract_text
 
 
-dia = "17"
-mes = "03"
-ano = "2023"
 
 # Verifica se o arquivo PDF existe
 if not os.path.exists("mapa.pdf"):
@@ -32,6 +29,12 @@ try:
     num = linhas[5].split(" ")[1]
     print(num)
 
+    data = linhas[5].split(" ")[4]
+    dia = data.split('/')[0]
+    mes = data.split('/')[1]
+    ano = data.split('/')[2]
+    print(data)
+
     # Extrai o título do processo da linha de índice 7
     titulo = linhas[7].split(" ")
     titulo.remove('DESCRIÇÃO:')
@@ -51,12 +54,12 @@ except Exception as e:
 
 
 # Substitua o valor abaixo pelo CNPJ que deseja consultar
-cnpj = '14818544000170'
+cnpj_input = input('Qual CNPJ?')
 
 # Faz a solicitação HTTP para a API
-url = f'https://cnpj.biz/{cnpj}'
+url = f'https://cnpj.biz/{cnpj_input}'
 
-response = requests.get(f'https://cnpj.biz/{cnpj}')
+response = requests.get(url)
 content = response.content
 
 dados_cnpj = BeautifulSoup(content, 'html.parser')
@@ -64,13 +67,11 @@ dados_cnpj = dados_cnpj.findAll('b', attrs={'class': 'copy'})
 
 cnpj = dados_cnpj[0].text
 razao = dados_cnpj[2].text
-
-
 print(cnpj)
 print(razao)
 
+
 numoficio = f'{dia}' + f'{mes}' + '-0001.' + f'{ano}'
-data = f'{dia}' + '/' + f'{mes}' + '/' + f'{ano}'
 
 
 doc = Document('oficio1.docx')
@@ -90,7 +91,7 @@ p2 = doc.add_paragraph(
 p2.add_run(num).bold = True
 p2.add_run(' para: ')
 p2.add_run(descricao).bold = True
-p2.add_run(' , encaminha-se ao Setor de Licitação as respectivas propostas juntamente com o mapa de preço médio e comprovações junto ao TCE/CE para providências cabíveis quanto ao seguimento do processo licitatório.\t\t\n')
+p2.add_run(', encaminha-se ao Setor de Licitação as respectivas propostas juntamente com o mapa de preço médio e comprovações junto ao TCE/CE para providências cabíveis quanto ao seguimento do processo licitatório.\t\t\n')
 
 p2.alignment = docx.enum.text.WD_ALIGN_PARAGRAPH.JUSTIFY
 
@@ -98,12 +99,12 @@ p2.alignment = docx.enum.text.WD_ALIGN_PARAGRAPH.JUSTIFY
 table = doc.tables[0]
 
 referencias = {
-    "CNPJ1": f'{cnpj}',
-    "CNPJ2": f'{cnpj}',
-    "CNPJ3": f'{cnpj}',
-    "RAZAO1": f'{razao}',
-    "RAZAO2": f'{razao}',
-    "RAZAO3": f'{razao}',
+    "CNPJ1": f'{cnpj[0]}',
+    "CNPJ2": f'{cnpj[1]}',
+    "CNPJ3": f'{cnpj[2]}',
+    "RAZAO1": f'{razao[0]}',
+    "RAZAO2": f'{razao[1]}',
+    "RAZAO3": f'{razao[2]}',
     "DATA1": f'{data}',
     "DATA2": f'{data}',
     "DATA3": f'{data}',
