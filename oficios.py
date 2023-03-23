@@ -147,10 +147,12 @@ try:
     titulo = titulo.replace('  ', ' ')
     print(titulo)
 
-    # Extrai a descrição do processo da linha de índice 9
-    descricao = linhas[9].split(" ")
+    # Encontra o índice da linha que contém "Unid. de medida"
+    indice_udm = linhas.index("Unid. de medida")
+
+    # Extrai a descrição até o índice encontrado
+    descricao = " ".join(linhas[7:indice_udm])
     descricao.remove('ESPECIFICAÇÃO:')
-    descricao = " ".join(descricao)
     descricao = descricao.replace('  ', ' ')
     print(descricao + "\n")
 
@@ -189,6 +191,10 @@ numoficio = f'{dia}' + f'{mes}' + '-0001.' + f'{ano}'
 
 
 doc = Document('oficio1.docx')
+
+tabela = doc.tables[0]
+print(tabela)
+
 
 p = doc.add_paragraph('Oficio nº ')
 p.add_run(numoficio).bold = True
@@ -237,47 +243,19 @@ for i in range(len(table.rows)):
 for para in doc.paragraphs:
     for run in para.runs:
         run.font.name = 'Calibri Light'
+
+tabela = doc.tables[0]
+
+# Cria um novo parágrafo vazio no final do documento
+novo_paragrafo = doc.add_paragraph()
+
+# Insere a tabela antes do parágrafo vazio
+tabela_antes = novo_paragrafo.insert_paragraph_before('')
+tabela_antes._element.addprevious(tabela._element)
+
+
+
+
 print("final")
 
 doc.save(f'{numoficio}' + ' - ' + f'{titulo}' + '.docx')
-
-
-# records = (
-#     ('1', f'{cnpj}', f'{razao}', 'E-MAIL – SISTEMA aCotação', '10/03/2023', '60 DIAS'),
-#     ('2', f'{cnpj}', f'{razao}', 'E-MAIL – SISTEMA aCotação', '10/03/2023', '60 DIAS'),
-#     ('3', f'{cnpj}', f'{razao}', 'E-MAIL – SISTEMA aCotação', '10/03/2023', '60 DIAS')
-# )
-#
-# table = doc.add_table(rows=1, cols=6)
-# hdr_cells = table.rows[0].cells
-# hdr_cells[0].text = 'ITEM'
-# hdr_cells[1].text = 'CNPJ/CPF'
-# hdr_cells[2].text = 'EMPRESA'
-# hdr_cells[3].text = 'MÉTODO'
-# hdr_cells[4].text = 'DATA DA PROPOSTA'
-# hdr_cells[5].text = 'VALIDADE'
-#
-# for item, cnpj, empresa, método, data, validade  in records:
-#     row_cells = table.add_row().cells
-#     row_cells[0].text = item
-#     row_cells[1].text = cnpj
-#     row_cells[2].text = empresa
-#     row_cells[3].text = método
-#     row_cells[4].text = data
-#     row_cells[5].text = validade
-#
-#
-# referencias = {
-#     "CNPJ1": cnpj,
-#     "CNPJ2": cnpj,
-#     "CNPJ3": cnpj,
-#     "RAZAO1": razao,
-#     "RAZAO2": razao,
-#     "RAZAO3": razao,
-#
-# }
-#
-# for paragrafo in doc.paragraphs:
-#     for codigo in referencias:
-#         valor = referencias[codigo]
-#         paragrafo.text = paragrafo.text.replace(codigo, valor)
