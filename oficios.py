@@ -17,7 +17,36 @@ class CustomButton(customtkinter.CTkButton):
         customtkinter.CTkButton.__init__(self, master=master, **kw)
     def return_value(self, value):
         self.master.return_value = value
+        self.master.destroy()
 
+def input_dados():
+    root = customtkinter.CTk()
+    root.geometry("300x200")
+    root.title("Input Demo")
+
+    # Definindo a função que será executada quando o botão for clicado
+    def input_pdf():
+        entry = filedialog.askopenfilename(title="Selecione o arquivo MAPA PDF", filetypes=(("pdf files", "*.pdf"),))
+        custom_button.return_value(entry)
+
+    input_cnpj = customtkinter.CTkEntry(root)
+    input_cnpj.pack(pady=10)
+    print(input_cnpj)
+
+    # Criando a entrada e o botão personalizado
+    custom_button = CustomButton(root, text="Abre o Mapa PDF", command=input_pdf)
+    custom_button.pack(pady=10)
+
+
+    # Iniciando a janela principal e esperando pelo retorno de valor
+    root.mainloop()
+
+    # Retornando o valor após a janela ser fechada
+    return root.return_value
+
+
+
+url_pdf = input_dados()
 
 # Extrai texto do arquivo PDF PAGINA 1
 pag1 = extract_text(url_pdf, page_numbers=[0])
