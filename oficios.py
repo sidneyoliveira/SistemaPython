@@ -1,16 +1,11 @@
-import os
 import docx
 import requests
 from bs4 import BeautifulSoup
 from docx import Document
-from pdfminer.high_level import extract_pages, extract_text
+from pdfminer.high_level import extract_text
 from tkinter import filedialog
-import sqlite3
-import tkinter
 import customtkinter
-import subprocess
 from tkinter import *
-from PIL import Image, ImageTk
 
 
 
@@ -18,14 +13,16 @@ cnpj1 = ""
 cnpj2 = ""
 cnpj3 = ""
 
+global data1
+global data2
+global data3
+
 class CustomButton(customtkinter.CTkButton):
     def __init__(self, master, **kw):
         customtkinter.CTkButton.__init__(self, master=master, **kw)
     def return_value(self, value):
         self.master.return_value = value
         self.master.destroy()
-
-
 
 
 def input_dados():
@@ -148,10 +145,9 @@ try:
     print(titulo)
 
     # Encontra o índice da linha que contém "Unid. de medida"
-    indice_udm = linhas.index("Unid. de medida")
-
+    indice_udm = linhas.index("Item")
     # Extrai a descrição até o índice encontrado
-    descricao = " ".join(linhas[7:indice_udm])
+    descricao = " ".join(linhas[9:indice_udm])
     descricao.remove('ESPECIFICAÇÃO:')
     descricao = descricao.replace('  ', ' ')
     print(descricao + "\n")
@@ -252,7 +248,6 @@ novo_paragrafo = doc.add_paragraph()
 # Insere a tabela antes do parágrafo vazio
 tabela_antes = novo_paragrafo.insert_paragraph_before('')
 tabela_antes._element.addprevious(tabela._element)
-
 
 
 
