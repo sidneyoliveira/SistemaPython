@@ -7,8 +7,6 @@ from tkinter import filedialog
 import customtkinter
 from tkinter import *
 
-
-
 cnpj1 = ""
 cnpj2 = ""
 cnpj3 = ""
@@ -23,7 +21,6 @@ class CustomButton(customtkinter.CTkButton):
     def return_value(self, value):
         self.master.return_value = value
         self.master.destroy()
-
 
 def input_dados():
     root = customtkinter.CTk()
@@ -109,7 +106,6 @@ def input_dados():
     return root.return_value
 
 
-
 dados = input_dados()
 print(dados)
 
@@ -131,7 +127,7 @@ try:
     print(num)
 
     # Extrai a data do processo da linha de índice 5
-    data = linhas[5].split(" ")[4]
+    data: str = linhas[5].split(" ")[4]
     dia = data.split('/')[0]
     mes = data.split('/')[1]
     ano = data.split('/')[2]
@@ -182,15 +178,11 @@ empresa3 = dados_cnpj(cnpj3)
 cnpj3_input = empresa3[0]
 razao3 = empresa3[1]
 
-
 numoficio = f'{dia}' + f'{mes}' + '-0001.' + f'{ano}'
 
 
 doc = Document('oficio1.docx')
-
 tabela = doc.tables[0]
-print(tabela)
-
 
 p = doc.add_paragraph('Oficio nº ')
 p.add_run(numoficio).bold = True
@@ -202,15 +194,12 @@ p.add_run(data + '\n\n').bold = True
 doc.add_paragraph('INEZ Helena Braga')
 doc.add_paragraph('Presidente da Comissão de Licitação\n\n')
 
-p2 = doc.add_paragraph(
-    '\t\tConsiderando a realização de pesquisa de preço via e-mail junto ao sistema de cotação pública aCotação processo nº: ')
+p2 = doc.add_paragraph('\t\tConsiderando a realização de pesquisa de preço via e-mail junto ao sistema de cotação pública aCotação processo nº: ')
 p2.add_run(num).bold = True
 p2.add_run(' para: ')
 p2.add_run(descricao).bold = True
 p2.add_run(', encaminha-se ao Setor de Licitação as respectivas propostas juntamente com o mapa de preço médio e comprovações junto ao TCE/CE para providências cabíveis quanto ao seguimento do processo licitatório.\t\t\n')
-
 p2.alignment = docx.enum.text.WD_ALIGN_PARAGRAPH.JUSTIFY
-
 
 table = doc.tables[0]
 
@@ -242,15 +231,11 @@ for para in doc.paragraphs:
 
 tabela = doc.tables[0]
 
-# Cria um novo parágrafo vazio no final do documento
 novo_paragrafo = doc.add_paragraph()
 
 # Insere a tabela antes do parágrafo vazio
 tabela_antes = novo_paragrafo.insert_paragraph_before('')
 tabela_antes._element.addprevious(tabela._element)
 
-
-
-print("final")
 
 doc.save(f'{numoficio}' + ' - ' + f'{titulo}' + '.docx')
