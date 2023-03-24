@@ -15,12 +15,13 @@ global data1
 global data2
 global data3
 
+global name_docx
+
 class CustomButton(customtkinter.CTkButton):
     def __init__(self, master, **kw):
         customtkinter.CTkButton.__init__(self, master=master, **kw)
     def return_value(self, value):
         self.master.return_value = value
-        self.master.destroy()
 
 def input_dados():
     root = customtkinter.CTk()
@@ -38,19 +39,29 @@ def input_dados():
         try:
             entry = filedialog.askopenfilename(title="Selecione o arquivo MAPA PDF", filetypes=(("pdf files", "*.pdf"),))
             custom_button.return_value(entry)
+
         except FileNotFoundError:
             print("Arquivo não encontrado.")
-        except:
-            print("Ocorreu um erro inesperado.")
-        finally:
-            print("Importação do arquivo concluída.")
+
+    def salvar_pdf():
+        # Cria uma janela para exibir o dialog
+        root = customtkinter.CTk()
+        root.withdraw()
+
+        # Exibe o dialog de seleção de arquivo
+        file_path = filedialog.asksaveasfilename( filetypes=[('Documento Word', ".docx")], defaultextension=".docx")
+
+        # Fecha a janela
+        root.destroy()
+        doc.save(f'{file_path}' + '/'+ f'{numoficio}' + ' - ' + f'{titulo}' + '.docx')
+
 
     input_cnpj1 = customtkinter.CTkEntry(root, placeholder_text="CNPJ",
                                          width=200, height=40,
                                          border_width=2,
                                          border_color='#dddddd',
                                          corner_radius=10, )
-    input_cnpj1.grid(column=1, row=1, padx=10, pady=10)
+    input_cnpj1.grid(column=1, row=1, padx=10, pady=5)
     input_cnpj1.bind("<FocusOut>", on_input_change("cnpj1", input_cnpj1))
 
 
@@ -59,7 +70,7 @@ def input_dados():
                                          border_width=2,
                                          border_color='#dddddd',
                                          corner_radius=10, )
-    input_data1.grid(column=2, row=1, padx=10, pady=10)
+    input_data1.grid(column=2, row=1, padx=10, pady=5)
     input_data1.bind("<FocusOut>", on_input_change("data1", input_data1))
 
     input_cnpj2 = customtkinter.CTkEntry(root, placeholder_text="CNPJ",
@@ -68,7 +79,7 @@ def input_dados():
                                          border_color='#dddddd',
                                          corner_radius=10, )
 
-    input_cnpj2.grid(column=1, row=2, padx=10, pady=10)
+    input_cnpj2.grid(column=1, row=2, padx=10, pady=5)
     input_cnpj2.bind("<FocusOut>", on_input_change("cnpj2", input_cnpj2))
 
     input_data2 = customtkinter.CTkEntry(root, placeholder_text="Data",
@@ -76,7 +87,7 @@ def input_dados():
                                          border_width=2,
                                          border_color='#dddddd',
                                          corner_radius=10, )
-    input_data2.grid(column=2, row=2, padx=10, pady=10)
+    input_data2.grid(column=2, row=2, padx=10, pady=5)
     input_data2.bind("<FocusOut>", on_input_change("data2", input_data2))
 
     input_cnpj3 = customtkinter.CTkEntry(root, placeholder_text="CNPJ",
@@ -84,7 +95,7 @@ def input_dados():
                                          border_width=2,
                                          border_color='#dddddd',
                                          corner_radius=10, )
-    input_cnpj3.grid(column=1, row=3, padx=10, pady=10)
+    input_cnpj3.grid(column=1, row=3, padx=10, pady=5)
     input_cnpj3.bind("<FocusOut>", on_input_change("cnpj3", input_cnpj3))
 
     input_data3 = customtkinter.CTkEntry(root, placeholder_text="Data",
@@ -92,22 +103,25 @@ def input_dados():
                                          border_width=2,
                                          border_color='#dddddd',
                                          corner_radius=10, )
-    input_data3.grid(column=2, row=3, padx=10, pady=10)
+    input_data3.grid(column=2, row=3, padx=10, pady=5)
     input_data3.bind("<FocusOut>", on_input_change("data3", input_data2))
 
     # Criando a entrada e o botão personalizado
     custom_button = CustomButton(root, text="Abrir Mapa PDF", command=input_pdf)
     custom_button.grid(column=1, row=4, padx=10, pady=10, sticky=W)
 
+    # Criando a entrada e o botão personalizado
+    button_save = CustomButton(root, text="Salvar", command=salvar_pdf)
+    button_save.grid(column=1, row=5, padx=10, pady=10, sticky=W)
 
     # Iniciando a janela principal e esperando pelo retorno de valor
     root.mainloop()
 
-    return root.return_value
+    return root
 
 
 dados = input_dados()
-print(dados)
+
 
 # Extrai texto do arquivo PDF PAGINA 1
 pag1 = extract_text(dados, page_numbers=[0])
@@ -180,6 +194,7 @@ razao3 = empresa3[1]
 
 numoficio = f'{dia}' + f'{mes}' + '-0001.' + f'{ano}'
 
+name_docx = str(f'{numoficio}' + ' - ' + f'{titulo}')
 
 doc = Document('oficio1.docx')
 tabela = doc.tables[0]
@@ -200,6 +215,7 @@ p2.add_run(' para: ')
 p2.add_run(descricao).bold = True
 p2.add_run(', encaminha-se ao Setor de Licitação as respectivas propostas juntamente com o mapa de preço médio e comprovações junto ao TCE/CE para providências cabíveis quanto ao seguimento do processo licitatório.\t\t\n')
 p2.alignment = docx.enum.text.WD_ALIGN_PARAGRAPH.JUSTIFY
+
 
 table = doc.tables[0]
 
@@ -238,4 +254,4 @@ tabela_antes = novo_paragrafo.insert_paragraph_before('')
 tabela_antes._element.addprevious(tabela._element)
 
 
-doc.save(f'{numoficio}' + ' - ' + f'{titulo}' + '.docx')
+
