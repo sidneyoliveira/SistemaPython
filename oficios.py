@@ -14,8 +14,9 @@ cnpj3 = ""
 global data1
 global data2
 global data3
-
-global name_docx
+global_var = None
+global doc
+doc = Document('oficio1.docx')
 
 class CustomButton(customtkinter.CTkButton):
     def __init__(self, master, **kw):
@@ -23,108 +24,97 @@ class CustomButton(customtkinter.CTkButton):
     def return_value(self, value):
         self.master.return_value = value
 
-def input_dados():
-    root = customtkinter.CTk()
-    root.geometry("600x300")
-    root.title("Input Demo")
+def assign_global_var(value):
+    global global_var
+    global_var = value
+def on_input_change(var_name, input_obj):
+    def on_change(event):
+        globals()[var_name] = input_obj.get()
+    return on_change
 
-    def on_input_change(var_name, input_obj):
-        def on_change(event):
-            globals()[var_name] = input_obj.get()
+# Definindo a função que será executada quando o botão for clicado
+def input_pdf():
+    try:
+        global global_var
+        entry = filedialog.askopenfilename(title="Selecione o arquivo MAPA PDF", filetypes=(("pdf files", "*.pdf"),))
+        global_var = entry
+        return global_var
+    except FileNotFoundError:
+        print("Arquivo não encontrado.")
 
-        return on_change
+def salvar_doc():
+    print(doc)
+    doc.save('.docx')
 
-    # Definindo a função que será executada quando o botão for clicado
-    def input_pdf():
-        try:
-            entry = filedialog.askopenfilename(title="Selecione o arquivo MAPA PDF", filetypes=(("pdf files", "*.pdf"),))
-            custom_button.return_value(entry)
+root = customtkinter.CTk()
+root.geometry("600x300")
+root.title("Oficios")
 
-        except FileNotFoundError:
-            print("Arquivo não encontrado.")
-
-    def salvar_pdf():
-        # Cria uma janela para exibir o dialog
-        root = customtkinter.CTk()
-        root.withdraw()
-
-        # Exibe o dialog de seleção de arquivo
-        file_path = filedialog.asksaveasfilename( filetypes=[('Documento Word', ".docx")], defaultextension=".docx")
-
-        # Fecha a janela
-        root.destroy()
-        doc.save(f'{file_path}' + '/'+ f'{numoficio}' + ' - ' + f'{titulo}' + '.docx')
-
-
-    input_cnpj1 = customtkinter.CTkEntry(root, placeholder_text="CNPJ",
+input_cnpj1 = customtkinter.CTkEntry(root, placeholder_text="CNPJ",
                                          width=200, height=40,
                                          border_width=2,
                                          border_color='#dddddd',
                                          corner_radius=10, )
-    input_cnpj1.grid(column=1, row=1, padx=10, pady=5)
-    input_cnpj1.bind("<FocusOut>", on_input_change("cnpj1", input_cnpj1))
+input_cnpj1.grid(column=1, row=1, padx=10, pady=10)
+input_cnpj1.bind("<FocusOut>", on_input_change("cnpj1", input_cnpj1))
 
 
-    input_data1 = customtkinter.CTkEntry(root, placeholder_text="Data",
+input_data1 = customtkinter.CTkEntry(root, placeholder_text="Data",
                                          width=200, height=40,
                                          border_width=2,
                                          border_color='#dddddd',
                                          corner_radius=10, )
-    input_data1.grid(column=2, row=1, padx=10, pady=5)
-    input_data1.bind("<FocusOut>", on_input_change("data1", input_data1))
+input_data1.grid(column=2, row=1, padx=10, pady=10)
+input_data1.bind("<FocusOut>", on_input_change("data1", input_data1))
 
-    input_cnpj2 = customtkinter.CTkEntry(root, placeholder_text="CNPJ",
+input_cnpj2 = customtkinter.CTkEntry(root, placeholder_text="CNPJ",
                                          width=200, height=40,
                                          border_width=2,
                                          border_color='#dddddd',
                                          corner_radius=10, )
 
-    input_cnpj2.grid(column=1, row=2, padx=10, pady=5)
-    input_cnpj2.bind("<FocusOut>", on_input_change("cnpj2", input_cnpj2))
+input_cnpj2.grid(column=1, row=2, padx=10, pady=10)
+input_cnpj2.bind("<FocusOut>", on_input_change("cnpj2", input_cnpj2))
 
-    input_data2 = customtkinter.CTkEntry(root, placeholder_text="Data",
+input_data2 = customtkinter.CTkEntry(root, placeholder_text="Data",
                                          width=200, height=40,
                                          border_width=2,
                                          border_color='#dddddd',
                                          corner_radius=10, )
-    input_data2.grid(column=2, row=2, padx=10, pady=5)
-    input_data2.bind("<FocusOut>", on_input_change("data2", input_data2))
+input_data2.grid(column=2, row=2, padx=10, pady=10)
+input_data2.bind("<FocusOut>", on_input_change("data2", input_data2))
 
-    input_cnpj3 = customtkinter.CTkEntry(root, placeholder_text="CNPJ",
+input_cnpj3 = customtkinter.CTkEntry(root, placeholder_text="CNPJ",
                                          width=200, height=40,
                                          border_width=2,
                                          border_color='#dddddd',
                                          corner_radius=10, )
-    input_cnpj3.grid(column=1, row=3, padx=10, pady=5)
-    input_cnpj3.bind("<FocusOut>", on_input_change("cnpj3", input_cnpj3))
+input_cnpj3.grid(column=1, row=3, padx=10, pady=10)
+input_cnpj3.bind("<FocusOut>", on_input_change("cnpj3", input_cnpj3))
 
-    input_data3 = customtkinter.CTkEntry(root, placeholder_text="Data",
+input_data3 = customtkinter.CTkEntry(root, placeholder_text="Data",
                                          width=200, height=40,
                                          border_width=2,
                                          border_color='#dddddd',
                                          corner_radius=10, )
-    input_data3.grid(column=2, row=3, padx=10, pady=5)
-    input_data3.bind("<FocusOut>", on_input_change("data3", input_data2))
+input_data3.grid(column=2, row=3, padx=10, pady=10)
+input_data3.bind("<FocusOut>", on_input_change("data3", input_data2))
 
-    # Criando a entrada e o botão personalizado
-    custom_button = CustomButton(root, text="Abrir Mapa PDF", command=input_pdf)
-    custom_button.grid(column=1, row=4, padx=10, pady=10, sticky=W)
+# Criando a entrada e o botão personalizado
+custom_button = CustomButton(root, text="Abrir Mapa PDF", command=lambda: assign_global_var(input_pdf()))
+custom_button.grid(column=1, row=4, padx=10, pady=10, sticky=W)
 
-    # Criando a entrada e o botão personalizado
-    button_save = CustomButton(root, text="Salvar", command=salvar_pdf)
-    button_save.grid(column=1, row=5, padx=10, pady=10, sticky=W)
+custom_button = customtkinter.CTkButton(root, text="Salvar PDF", command=salvar_doc())
+custom_button.grid(column=1, row=5, padx=10, pady=10, sticky=W)
 
-    # Iniciando a janela principal e esperando pelo retorno de valor
-    root.mainloop()
-
-    return root
+# Iniciando a janela principal e esperando pelo retorno de valor
+root.mainloop()
 
 
-dados = input_dados()
-
+print(global_var)
 
 # Extrai texto do arquivo PDF PAGINA 1
-pag1 = extract_text(dados, page_numbers=[0])
+pag1 = extract_text(global_var, page_numbers=[0])
 
 # Divide o texto em linhas
 linhas = pag1.split("\n")
@@ -158,7 +148,7 @@ try:
     indice_udm = linhas.index("Item")
     # Extrai a descrição até o índice encontrado
     descricao = " ".join(linhas[9:indice_udm])
-    descricao.remove('ESPECIFICAÇÃO:')
+    descricao = descricao.replace('ESPECIFICAÇÃO: ', '')
     descricao = descricao.replace('  ', ' ')
     print(descricao + "\n")
 
@@ -194,7 +184,8 @@ razao3 = empresa3[1]
 
 numoficio = f'{dia}' + f'{mes}' + '-0001.' + f'{ano}'
 
-name_docx = str(f'{numoficio}' + ' - ' + f'{titulo}')
+
+
 
 doc = Document('oficio1.docx')
 tabela = doc.tables[0]
@@ -215,7 +206,6 @@ p2.add_run(' para: ')
 p2.add_run(descricao).bold = True
 p2.add_run(', encaminha-se ao Setor de Licitação as respectivas propostas juntamente com o mapa de preço médio e comprovações junto ao TCE/CE para providências cabíveis quanto ao seguimento do processo licitatório.\t\t\n')
 p2.alignment = docx.enum.text.WD_ALIGN_PARAGRAPH.JUSTIFY
-
 
 table = doc.tables[0]
 
@@ -252,6 +242,5 @@ novo_paragrafo = doc.add_paragraph()
 # Insere a tabela antes do parágrafo vazio
 tabela_antes = novo_paragrafo.insert_paragraph_before('')
 tabela_antes._element.addprevious(tabela._element)
-
 
 
