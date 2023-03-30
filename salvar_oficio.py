@@ -7,10 +7,24 @@ from pdfminer.high_level import extract_text
 from tkinter import filedialog
 import customtkinter
 from tkinter import *
+global pdf_filename
+import ctypes
+
+cnpj1 = ''
+cnpj2 = ''
+cnpj3 = ''
+data1 = ''
+data2 = ''
+data3 = ''
+
+ICON_ERROR = 0x10
+ICON_WARNING = 0x30
+ICON_QUESTION = 0x20
+ICON_INFORMATION = 0x40
 
 def on_input_change(var_name, input_obj):
     def on_change(event):
-        globals()[var_name] = input_obj.get()
+            globals()[var_name] = input_obj.get()
 
     return on_change
 
@@ -18,52 +32,59 @@ def on_input_change(var_name, input_obj):
 # Definindo a função que será executada quando o botão for clicado
 def input_pdf(var_name):
     def entry(event):
-        globals()[var_name] = filedialog.askopenfilename(title="Selecione o arquivo MAPA PDF", filetypes=(("pdf files", "*.pdf"),))
-        print(globals()[var_name])
+        global pdf_filename
+        pdf_filename = filedialog.askopenfilename(title="Selecione o arquivo MAPA PDF",
+                                                  filetypes=(("pdf files", "*.pdf"),))
     return entry
 
+def exibir_alerta(titulo, mensagem, tipo_icone):
+    ctypes.windll.user32.MessageBoxW(0, mensagem, titulo, tipo_icone)
 
-def salvar_arquivo(event):
-    dados = ''
-    print(dados)
-    # Extrai texto do arquivo PDF PAGINA 1
-    pag1 = extract_text(dados, page_numbers=[0])
+def salvar_arquivo():
+    global pdf_filename
+    dados = pdf_filename
+    if dados:
+        print(dados)
+        # Extrai texto do arquivo PDF PAGINA 1
+        pag1 = extract_text(dados, page_numbers=[0])
 
-    # Divide o texto em linhas
-    linhas = pag1.split("\n")
+        # Divide o texto em linhas
+        linhas = pag1.split("\n")
 
-    # Imprime todas as linhas
-    print(linhas)
+        # Imprime todas as linhas
+        print(linhas)
 
-    # Imprime a linha de índice 7
-    print(linhas[7] + "\n\n")
+        # Imprime a linha de índice 7
+        print(linhas[7] + "\n\n")
 
-   # Extrai o número do processo da linha de índice 5
-    num = linhas[5].split(" ")[1]
-    print(num)
+        # Extrai o número do processo da linha de índice 5
+        num = linhas[5].split(" ")[1]
+        print(num)
 
-    # Extrai a data do processo da linha de índice 5
-    data: str = linhas[5].split(" ")[4]
-    dia = data.split('/')[0]
-    mes = data.split('/')[1]
-    ano = data.split('/')[2]
-    print(data)
+        # Extrai a data do processo da linha de índice 5
+        data: str = linhas[5].split(" ")[4]
+        dia = data.split('/')[0]
+        mes = data.split('/')[1]
+        ano = data.split('/')[2]
+        print(data)
 
-    # Extrai o título do processo da linha de índice 7
-    titulo = linhas[7].split(" ")
-    titulo.remove('DESCRIÇÃO:')
-    titulo = " ".join(titulo)
-    titulo = titulo.replace('  ', ' ')
-    print(titulo)
+        # Extrai o título do processo da linha de índice 7
+        titulo = linhas[7].split(" ")
+        titulo.remove('DESCRIÇÃO:')
+        titulo = " ".join(titulo)
+        titulo = titulo.replace('  ', ' ')
+        print(titulo)
 
-    # Encontra o índice da linha que contém "Unid. de medida"
-    indice_udm = linhas.index("Item")
-    # Extrai a descrição até o índice encontrado
-    descricao = " ".join(linhas[9:indice_udm])
-    descricao = descricao.replace('ESPECIFICAÇÃO:', '')
-    descricao = descricao.replace('  ', ' ')
-    print(descricao + "\n")
-
+        # Encontra o índice da linha que contém "Unid. de medida"
+        indice_udm = linhas.index("Item")
+        # Extrai a descrição até o índice encontrado
+        descricao = " ".join(linhas[9:indice_udm])
+        descricao = descricao.replace('ESPECIFICAÇÃO:', '')
+        descricao = descricao.replace('  ', ' ')
+        print(descricao + "\n")
+    else:
+        exibir_alerta("Atenção", "Mapa não Importado", 0x30)
+        return
     # Função para extrair dados do cnpj
     def dados_cnpj(a):
         url = f'https://cnpj.biz/{a}'
@@ -79,17 +100,29 @@ def salvar_arquivo(event):
         razao = dados_cnpj[2].text
         return cnpj, razao
 
-    empresa1 = dados_cnpj(cnpj1)
-    cnpj1_input = empresa1[0]
-    razao1 = empresa1[1]
+    if cnpj1:
+        empresa1 = dados_cnpj(cnpj1)
+        cnpj1_input = empresa1[0]
+        razao1 = empresa1[1]
+    else:
+        exibir_alerta("Atenção", "CNPJ da Empresa1 não informado", 0x30)
+        return
 
-    empresa2 = dados_cnpj(cnpj2)
-    cnpj2_input = empresa2[0]
-    razao2 = empresa2[1]
+    if cnpj2:
+        empresa2 = dados_cnpj(cnpj2)
+        cnpj2_input = empresa2[0]
+        razao2 = empresa2[1]
+    else:
+        exibir_alerta("Atenção", "CNPJ da Empresa2 não informado", 0x30)
+        return
 
-    empresa3 = dados_cnpj(cnpj3)
-    cnpj3_input = empresa3[0]
-    razao3 = empresa3[1]
+    if cnpj3:
+        empresa3 = dados_cnpj(cnpj3)
+        cnpj3_input = empresa3[0]
+        razao3 = empresa3[1]
+    else:
+        exibir_alerta("Atenção", "CNPJ da 3 não informado", 0x30)
+        return
 
     numoficio = f'{dia}' + f'{mes}' + '-0001.' + f'{ano}'
 
@@ -129,15 +162,19 @@ def salvar_arquivo(event):
         "DATA3": f'{data3}',
 
     }
-    for i in range(len(table.rows)):
-        for j in range(len(table.columns)):
-            cell = table.cell(i, j)
-            for paragraph in cell.paragraphs:
-                for run in paragraph.runs:
-                    for codigo in referencias:
-                        valor = referencias[codigo]
-                        new_text = run.text.replace(codigo, valor)
-                        run.text = new_text.upper()
+    if data1 and data2 and data3:
+        for i in range(len(table.rows)):
+            for j in range(len(table.columns)):
+                cell = table.cell(i, j)
+                for paragraph in cell.paragraphs:
+                    for run in paragraph.runs:
+                        for codigo in referencias:
+                            valor = referencias[codigo]
+                            new_text = run.text.replace(codigo, valor)
+                            run.text = new_text.upper()
+    else:
+        exibir_alerta("Atenção", "Atenção! Data não informada", 0x30)
+        return
 
     for para in doc.paragraphs:
         for run in para.runs:
@@ -151,10 +188,11 @@ def salvar_arquivo(event):
     tabela_antes = novo_paragrafo.insert_paragraph_before('')
     tabela_antes._element.addprevious(tabela._element)
 
-    nome_do_arquivo = f"{numoficio}-{titulo}.docx"
+    nome_do_arquivo = f'{numoficio} - {titulo}.docx'
     diretorio = filedialog.askdirectory()
+    print(diretorio)
     if diretorio:
-        arquivo = docx.Document(nome_do_arquivo)
         caminho_completo = os.path.join(diretorio, nome_do_arquivo)
-        arquivo.save(caminho_completo)
+        print(caminho_completo)
+        doc.save(caminho_completo)
         os.startfile(caminho_completo)

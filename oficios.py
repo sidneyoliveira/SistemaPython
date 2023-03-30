@@ -8,7 +8,7 @@ from pdfminer.high_level import extract_text
 from tkinter import filedialog
 import customtkinter
 from tkinter import *
-from salvar_oficio import salvar_arquivo, input_pdf, on_input_change
+from salvar_oficio import *
 
 cnpj1 = ""
 cnpj2 = ""
@@ -29,6 +29,9 @@ class CustomButton(customtkinter.CTkButton):
 def return_value(self, value):
     self.master.return_value = value
     # self.master.destroy()
+
+customtkinter.set_appearance_mode("light")
+customtkinter.set_default_color_theme("theme/light.json")
 
 root = customtkinter.CTk()
 root.geometry("600x300")
@@ -67,6 +70,7 @@ input_data2 = customtkinter.CTkEntry(root, placeholder_text="Data",
 input_data2.grid(column=2, row=2, padx=10, pady=10)
 input_data2.bind("<FocusOut>", on_input_change("data2", input_data2))
 
+
 input_cnpj3 = customtkinter.CTkEntry(root, placeholder_text="CNPJ",
                                      width=200, height=40,
                                      border_width=2,
@@ -83,16 +87,19 @@ input_data3 = customtkinter.CTkEntry(root, placeholder_text="Data",
 input_data3.grid(column=2, row=3, padx=10, pady=10)
 input_data3.bind("<FocusOut>", on_input_change("data3", input_data2))
 
+icon_pdf = PhotoImage(file="img/pdf_icon.png").subsample(15)
 # Criando a entrada e o botão personalizado
-botao_pdf = CustomButton(root, text="Abrir Mapa PDF")
+botao_pdf = customtkinter.CTkButton(root, text="Abrir Mapa PDF", image= icon_pdf,compound="left",)
 botao_pdf.grid(column=1, row=4, padx=10, pady=10, sticky=W)
 botao_pdf.bind("<Button-1>", input_pdf("botao_pdf"))
 # botao_pdf.bind("<FocusOut>", on_input_change("botao_pdf", botao_pdf))
 
+
+icon_docx = PhotoImage(file="img/word_icon.png").subsample(15)
 # Criando a entrada e o botão personalizado
-salvar_pdf = customtkinter.CTkButton(root, text="Salvar PDF")
-salvar_pdf.grid(column=1, row=5, padx=10, pady=10, sticky=W)
-salvar_pdf.bind("<FocusOut>", salvar_arquivo("botao_pdf"))
+salvar_docx = customtkinter.CTkButton(root, text="Salvar Word", image= icon_docx,compound="left", command=salvar_arquivo)
+salvar_docx.grid(column=2, row=4, padx=10, pady=10, sticky=W)
+
 
 root.mainloop()
 
