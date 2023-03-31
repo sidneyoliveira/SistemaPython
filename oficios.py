@@ -1,13 +1,3 @@
-import os
-
-import docx
-import requests
-from bs4 import BeautifulSoup
-from docx import Document
-from pdfminer.high_level import extract_text
-from tkinter import filedialog
-import customtkinter
-from tkinter import *
 from salvar_oficio import *
 
 cnpj1 = ""
@@ -89,7 +79,7 @@ input_data3.bind("<FocusOut>", on_input_change("data3", input_data2))
 
 icon_pdf = PhotoImage(file="img/pdf_icon.png").subsample(15)
 # Criando a entrada e o botão personalizado
-botao_pdf = customtkinter.CTkButton(root, text="Abrir Mapa PDF", image= icon_pdf,compound="left",)
+botao_pdf = customtkinter.CTkButton(root, width=200, text="Abrir Mapa PDF", image=icon_pdf, compound="left", )
 botao_pdf.grid(column=1, row=4, padx=10, pady=10, sticky=W)
 botao_pdf.bind("<Button-1>", input_pdf("botao_pdf"))
 # botao_pdf.bind("<FocusOut>", on_input_change("botao_pdf", botao_pdf))
@@ -97,7 +87,8 @@ botao_pdf.bind("<Button-1>", input_pdf("botao_pdf"))
 
 icon_docx = PhotoImage(file="img/word_icon.png").subsample(15)
 # Criando a entrada e o botão personalizado
-salvar_docx = customtkinter.CTkButton(root, text="Salvar Word", image= icon_docx,compound="left", command=salvar_arquivo)
+salvar_docx = customtkinter.CTkButton(root, width=200, text="Salvar Word", image=icon_docx, compound="left",
+                                      command=salvar_arquivo)
 salvar_docx.grid(column=2, row=4, padx=10, pady=10, sticky=W)
 
 

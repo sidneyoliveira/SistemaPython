@@ -1,34 +1,16 @@
-import os
-import docx
-import requests
-from bs4 import BeautifulSoup
-from docx import Document
-from pdfminer.high_level import extract_text
-from tkinter import filedialog
 import customtkinter
-from tkinter import *
+import tkinter as tk
+from tkinter import ttk
+from salvar_oficio import *
 
 cnpj1 = ""
 cnpj2 = ""
 cnpj3 = ""
-num = ''
-data = ''
-numoficio = ''
-titulo = ''
-descricao = ''
 
-cnpj1_input = ''
-cnpj2_input = ''
-cnpj3_input = ''
-razao1 = ''
-razao2 = ''
-razao3 = ''
-data1 = ''
-data2 = ''
-data3 = ''
-global_var = ''
-global doc
-doc = ''
+global data1
+global data2
+global data3
+global item_id
 
 
 class CustomButton(customtkinter.CTkButton):
@@ -37,254 +19,141 @@ class CustomButton(customtkinter.CTkButton):
 
     def return_value(self, value):
         self.master.return_value = value
+        # self.master.destroy()
 
 
-def assign_global_var(value):
-    global global_var
-    global_var = value
+def return_value(self, value):
+    self.master.return_value = value
+    # self.master.destroy()
+
+def adicionar_dados():
+    # Obtém os valores dos campos do formulário
+    cnpj = cnpj_entry.get()
+    razao_social = razao_social_entry.get()
+    data_coleta = data_coleta_entry.get()
+
+    # Adiciona os dados à tabela
+    tabela.insert(parent='', index='end', iid=0, text=str(0),
+                           values=(cnpj, razao_social, data_coleta))
+
+    # Limpa os campos do formulário
+    cnpj_entry.delete(0, 'end')
+    razao_social_entry.delete(0, 'end')
+    data_coleta_entry.delete(0, 'end')
+
+    # Incrementa o ID dos itens da tabela
+    item_id += 1
+
+def editar_item(event):
+    # Obtém o item selecionado na tabela
+    item = tabela.selection()[0]
+
+    # Obtém os valores do item selecionado
+    cnpj = tabela.item(item, 'values')[0]
+    razao_social = tabela.item(item, 'values')[1]
+    data_coleta = tabela.item(item, 'values')[2]
+    # Preenche os campos do formulário com os valores do item selecionado
+    cnpj_entry.delete(0, 'end')
+    cnpj_entry.insert(0, cnpj)
+
+    razao_social_entry.delete(0, 'end')
+    razao_social_entry.insert(0, razao_social)
+
+    data_coleta_entry.delete(0, 'end')
+    data_coleta_entry.insert(0, data_coleta)
+
+def remover_item(event):
+    # Obtém o item selecionado na tabela
+    item = tabela.selection()[0]
+
+    # Remove o item selecionado da tabela
+    tabela.delete(item)
 
 
-def on_input_change(var_name, input_obj):
-    def on_change(event):
-        globals()[var_name] = input_obj.get()
 
-    return on_change
-
-
-# Definindo a função que será executada quando o botão for clicado
-def input_pdf():
-    try:
-        global global_var
-        entry = filedialog.askopenfilename(title="Selecione o arquivo MAPA PDF", filetypes=(("pdf files", "*.pdf"),))
-        global_var = entry
-        print(global_var)
-        return global_var
-    except FileNotFoundError:
-        print("Arquivo não importado.")
-
-def dados_pdf(global_var):
-    print(global_var)
-
-    # Extrai texto do arquivo PDF PAGINA 1
-    pag1 = extract_text(global_var, page_numbers=[0])
-
-    # Divide o texto em linhas
-    linhas = pag1.split("\n")
-
-    # Imprime todas as linhas
-    print(linhas)
-
-    # Imprime a linha de índice 7
-    print(linhas[7] + "\n\n")
-    num = linhas[5].split(" ")[1]
-    print(num)
-
-    data: str = linhas[5].split(" ")[4]
-    dia = data.split('/')[0]
-    mes = data.split('/')[1]
-    ano = data.split('/')[2]
-    numoficio = f'{dia}' + f'{mes}' + '-0001.' + f'{ano}'
-    print(data)
-
-    # Extrai o título do processo da linha de índice 7
-    titulo = linhas[7].split(" ")
-    titulo.remove('DESCRIÇÃO:')
-    titulo = " ".join(titulo)
-    titulo = titulo.replace('  ', ' ')
-    print(titulo)
-
-    # Encontra o índice da linha que contém "Unid. de medida"
-
-    indice_udm = linhas.index("Item")
-    # Extrai a descrição até o índice encontrado
-
-    descricao = " ".join(linhas[9:indice_udm])
-    descricao = descricao.replace('ESPECIFICAÇÃO: ', '')
-    descricao = descricao.replace('  ', ' ')
-    print(descricao + "\n")
-
-    return num, data, numoficio, titulo, descricao
-
-
-# Função para extrair dados do cnpj
-def dados_cnpj(a):
-    url = f'https://cnpj.biz/{a}'
-    response = requests.get(url)
-    content = response.content
-    dados_cnpj = BeautifulSoup(content, 'html.parser')
-    print(dados_cnpj)
-
-    dados_cnpj = dados_cnpj.findAll('b', attrs={'class': 'copy'})
-    print(url)
-    print(dados_cnpj)
-    cnpj = dados_cnpj[0].text
-    razao = dados_cnpj[2].text
-    return cnpj, razao
-
+customtkinter.set_appearance_mode("light")
+customtkinter.set_default_color_theme('theme/light.json')
 
 root = customtkinter.CTk()
-root.geometry("600x300")
-root.title("Oficios")
+root.geometry("800x500")
+root.title("Input Demo")
 
-input_cnpj1 = customtkinter.CTkEntry(root, placeholder_text="CNPJ",
-                                     width=200, height=40,
-                                     border_width=2,
-                                     border_color='#dddddd',
-                                     corner_radius=10, )
-input_cnpj1.grid(column=1, row=1, padx=10, pady=10)
-input_cnpj1.bind("<FocusOut>", on_input_change("cnpj1", input_cnpj1))
 
-input_data1 = customtkinter.CTkEntry(root, placeholder_text="Data",
-                                     width=200, height=40,
-                                     border_width=2,
-                                     border_color='#dddddd',
-                                     corner_radius=10, )
-input_data1.grid(column=2, row=1, padx=10, pady=10)
-input_data1.bind("<FocusOut>", on_input_change("data1", input_data1))
+# Define o estilo da tabela
+style = ttk.Style()
+style.configure('Treeview', rowheight=40, bordercolor="white", borderwidth=0, highlightthickness=0, relief="flat")
+style.configure('Treeview.Heading', background='#FFA500', foreground='white', font=('Arial', 12, 'bold'))
+style.layout('Treeview', [('Treeview.treearea', {'sticky': 'nswe'})])
 
-input_cnpj2 = customtkinter.CTkEntry(root, placeholder_text="CNPJ",
-                                     width=200, height=40,
-                                     border_width=2,
-                                     border_color='#dddddd',
-                                     corner_radius=10, )
+# Cria a tabela
+tabela = ttk.Treeview(root, columns=('CNPJ', 'Razão Social', 'Data da Coleta'))
+tabela.heading('#0', text='ID')
+tabela.heading('CNPJ', text='CNPJ')
+tabela.heading('Razão Social', text='Razão Social')
+tabela.heading('Data da Coleta', text='Data da Coleta')
+tabela.grid(column=1, row=1, padx=10, pady=10)
 
-input_cnpj2.grid(column=1, row=2, padx=10, pady=10)
-input_cnpj2.bind("<FocusOut>", on_input_change("cnpj2", input_cnpj2))
+# Define a coloração das linhas da tabela
+for i, item in enumerate(tabela.get_children()):
+    if i % 2 == 0:
+        tabela.item(item, tags=('even',))
+    else:
+        tabela.item(item, tags=('odd',))
 
-input_data2 = customtkinter.CTkEntry(root, placeholder_text="Data",
-                                     width=200, height=40,
-                                     border_width=2,
-                                     border_color='#dddddd',
-                                     corner_radius=10, )
-input_data2.grid(column=2, row=2, padx=10, pady=10)
-input_data2.bind("<FocusOut>", on_input_change("data2", input_data2))
+tabela.tag_configure('even', background='#ECECEC')
+tabela.tag_configure('odd', background='white')
 
-input_cnpj3 = customtkinter.CTkEntry(root, placeholder_text="CNPJ",
-                                     width=200, height=40,
-                                     border_width=2,
-                                     border_color='#dddddd',
-                                     corner_radius=10, )
-input_cnpj3.grid(column=1, row=3, padx=10, pady=10)
-input_cnpj3.bind("<FocusOut>", on_input_change("cnpj3", input_cnpj3))
+# # Cria a tabela
+# tabela = ttk.Treeview(root, columns=('CNPJ', 'Razão Social', 'Data da Coleta'))
+# tabela.heading('#0', text='ID')
+# tabela.heading('CNPJ', text='CNPJ')
+# tabela.heading('Razão Social', text='Razão Social')
+# tabela.heading('Data da Coleta', text='Data da Coleta')
+# tabela.grid(column=1, row=1, padx=10, pady=10)
 
-input_data3 = customtkinter.CTkEntry(root, placeholder_text="Data",
-                                     width=200, height=40,
-                                     border_width=2,
-                                     border_color='#dddddd',
-                                     corner_radius=10, )
-input_data3.grid(column=2, row=3, padx=10, pady=10)
-input_data3.bind("<FocusOut>", on_input_change("data3", input_data2))
+# Cria o formulário de entrada de dados
+form = tk.Frame(root)
+form.grid(column=1, row=2, padx=10, pady=10)
 
+cnpj_label = tk.Label(form, text='CNPJ:')
+cnpj_entry = tk.Entry(form)
+cnpj_label.grid(row=0, column=0)
+cnpj_entry.grid(row=0, column=1)
+
+razao_social_label = tk.Label(form, text='Razão Social:')
+razao_social_entry = tk.Entry(form)
+razao_social_label.grid(row=1, column=0)
+razao_social_entry.grid(row=1, column=1)
+
+data_coleta_label = tk.Label(form, text='Data da Coleta:')
+data_coleta_entry = tk.Entry(form)
+data_coleta_label.grid(row=2, column=0)
+data_coleta_entry.grid(row=2, column=1)
+
+add_button = tk.Button(form, text='Adicionar', command=adicionar_dados)
+add_button.grid(row=3, column=1)
+
+# Cria uma variável para gerenciar o ID dos itens da tabela
+root.item_id = 0
+
+# Adiciona eventos à tabela
+
+# tabela.bind("<Double-1>", editar_item(tabela, "<Double-1>"))
+# tabela.bind("<Delete>", remover_item(tabela, "<Delete>"))
+
+
+
+icon_pdf = PhotoImage(file="img/pdf_icon.png").subsample(15)
+
+botao_pdf = customtkinter.CTkButton(root, width=200, text="Abrir Cotação Empresa1", image=icon_pdf, compound="left", )
+botao_pdf.grid(column=1, row=3, padx=10, pady=10, sticky=W)
+botao_pdf.bind("<Button-1>", input_pdf("botao_pdf"))
+# botao_pdf.bind("<FocusOut>", on_input_change("botao_pdf", botao_pdf))
+
+icon_docx = PhotoImage(file="img/word_icon.png").subsample(15)
 # Criando a entrada e o botão personalizado
-custom_button = CustomButton(root, text="Abrir Mapa PDF", command=lambda: assign_global_var(input_pdf()))
-custom_button.grid(column=1, row=4, padx=10, pady=10, sticky=W)
+salvar_docx = customtkinter.CTkButton(root, width=200, text="Salvar Word", image=icon_docx, compound="left",
+                                      command=salvar_arquivo)
+salvar_docx.grid(column=1, row=4, padx=10, pady=10, sticky=W)
 
-if cnpj1:
-    empresa1 = dados_cnpj(cnpj1)
-    cnpj1_input = empresa1[0]
-    razao1 = empresa1[1]
-
-if cnpj2:
-    empresa2 = dados_cnpj(cnpj2)
-    cnpj2_input = empresa2[0]
-    razao2 = empresa2[1]
-
-if cnpj3:
-    empresa3 = dados_cnpj(cnpj3)
-    cnpj3_input = empresa3[0]
-    razao3 = empresa3[1]
-
-dados_cnpj()
-
-if global_var:
-    dados_doc = dados_pdf(global_var)
-    print(dados_pdf)
-    num = dados_doc[0]
-    data = dados_doc[1]
-    numoficio = dados_doc[2]
-    titulo = dados_doc[3]
-    descricao = dados_doc[4]
-
-
-def criar_documento(dados, dados_cnpj):
-
-    dados = dados_pdf(global_var)
-    print(dados)
-    numoficio = dados[2]
-    print(numoficio)
-
-    titulo = dados[3]
-    print(titulo)
-
-    doc = Document('oficio1.docx')
-    tabela = doc.tables[0]
-
-    p = doc.add_paragraph('Oficio nº ')
-    p.add_run(numoficio).bold = True
-    p.add_run(' - LICITAÇÃO \t\t\t\t\t')
-
-    p.add_run('ITAREMA-CE, ')
-    p.add_run(data + '\n\n').bold = True
-
-    doc.add_paragraph('INEZ Helena Braga')
-    doc.add_paragraph('Presidente da Comissão de Licitação\n\n')
-
-    p2 = doc.add_paragraph(
-        '\t\tConsiderando a realização de pesquisa de preço via e-mail junto ao sistema de cotação pública aCotação processo nº: ')
-    p2.add_run(num).bold = True
-    p2.add_run(' para: ')
-    p2.add_run(descricao).bold = True
-    p2.add_run(
-        ', encaminha-se ao Setor de Licitação as respectivas propostas juntamente com o mapa de preço médio e comprovações junto ao TCE/CE para providências cabíveis quanto ao seguimento do processo licitatório.\t\t\n')
-    p2.alignment = docx.enum.text.WD_ALIGN_PARAGRAPH.JUSTIFY
-
-    referencias = {
-        "CNPJ1": f'{cnpj1_input}',
-        "CNPJ2": f'{cnpj2_input}',
-        "CNPJ3": f'{cnpj3_input}',
-        "RAZAO1": f'{razao1}',
-        "RAZAO2": f'{razao2}',
-        "RAZAO3": f'{razao3}',
-        "DATA1": f'{data1}',
-        "DATA2": f'{data2}',
-        "DATA3": f'{data3}',
-    }
-
-    for i in range(len(tabela.rows)):
-        for j in range(len(tabela.columns)):
-            cell = tabela.cell(i, j)
-            for paragraph in cell.paragraphs:
-                for run in paragraph.runs:
-                    for codigo in referencias:
-                        valor = referencias[codigo]
-                        new_text = run.text.replace(codigo, valor)
-                        run.text = new_text.upper()
-
-    for para in doc.paragraphs:
-        for run in para.runs:
-            run.font.name = 'Calibri Light'
-
-    novo_paragrafo = doc.add_paragraph()
-
-    # Insere a tabela antes do parágrafo vazio
-    tabela_antes = novo_paragrafo.insert_paragraph_before('')
-    tabela_antes._element.addprevious(tabela._element)
-
-    diretorio = filedialog.askdirectory()
-    print(diretorio)
-
-    nome_do_arquivo = f"{numoficio} - {titulo}.docx"
-    print(nome_do_arquivo)
-
-    caminho_completo = os.path.join(diretorio, nome_do_arquivo)
-    print(caminho_completo)
-
-    doc.save(caminho_completo)
-    os.startfile(caminho_completo)
-
-
-custom_button = customtkinter.CTkButton(root, text="Salvar PDF", command=criar_documento(dados))
-custom_button.grid(column=1, row=5, padx=10, pady=10, sticky=W)
-
-# Iniciando a janela principal e esperando pelo retorno de valor
 root.mainloop()
