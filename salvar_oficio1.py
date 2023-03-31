@@ -15,11 +15,6 @@ cnpj_list = ["", "", ""]
 razao_list = ["", "", ""]
 data_list =  ["", "", ""]
 
-num=''
-numoficio =''
-data =''
-titulo =''
-descricao =''
 
 
 ICON_ERROR = 0x10
@@ -87,7 +82,7 @@ def salvar_arquivo(dados):
         indice_udm = linhas.index("Item Descrição do item")
         # Extrai a descrição até o índice encontrado
         descricao = " ".join(linhas[14:indice_udm])
-        descricao = descricao.replace('ESPECIFICAÇÃO:', '')
+        descricao = descricao.replace('ESPECIFICAÇÃO/OBJETO:', '')
         descricao = descricao.replace('  ', ' ')
         print(descricao + "\n")
 
@@ -124,8 +119,6 @@ def salvar_arquivo(dados):
     itens[2] = data
     itens[3] = titulo
     itens[4] = descricao
-
-    return
 
 def salvar_word():
 
