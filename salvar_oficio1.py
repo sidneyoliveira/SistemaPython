@@ -43,8 +43,7 @@ def exibir_alerta(titulo, mensagem, tipo_icone):
     ctypes.windll.user32.MessageBoxW(0, mensagem, titulo, tipo_icone)
 
 def salvar_arquivo(dados):
-    global pdf_filename
-    dados = "coleta.pdf"
+
     if dados:
         print(dados)
         # Extrai texto do arquivo PDF PAGINA 1
