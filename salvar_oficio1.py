@@ -4,7 +4,7 @@ import requests
 from bs4 import BeautifulSoup
 from docx import Document
 from pdfminer.high_level import extract_text
-from tkinter import filedialog
+from tkinter import filedialog, ttk
 import customtkinter
 from tkinter import *
 global pdf_filename
@@ -30,19 +30,19 @@ def on_input_change(var_name, input_obj):
 
 
 # Definindo a função que será executada quando o botão for clicado
-def input_pdf(var_name, tabela):
+def input_pdf(var_name):
     def entry(event):
         global pdf_filename
         pdf_filename = filedialog.askopenfilename(title="Selecione o arquivo MAPA PDF",
                                                   filetypes=(("pdf files", "*.pdf"),))
-        salvar_arquivo(pdf_filename, tabela)
+        salvar_arquivo(pdf_filename)
 
     return entry
 
 def exibir_alerta(titulo, mensagem, tipo_icone):
     ctypes.windll.user32.MessageBoxW(0, mensagem, titulo, tipo_icone)
 
-def salvar_arquivo(dados,tabela):
+def salvar_arquivo(dados):
 
     if dados:
         print(dados)
@@ -97,12 +97,10 @@ def salvar_arquivo(dados,tabela):
 
         global id_item
         id_item += 1
-
+        print(id_item)
         cnpj_list[id_item-1] = cnpj
         razao_list[id_item-1] = razao
         data_list[id_item-1] = data
-
-
 
 
 
@@ -122,6 +120,7 @@ def salvar_arquivo(dados,tabela):
     itens[2] = data
     itens[3] = titulo
     itens[4] = descricao
+    return
 
 def salvar_word():
 
@@ -199,5 +198,25 @@ def salvar_word():
         doc.save(caminho_completo)
         os.startfile(caminho_completo)
 
+print(id_item)
+def adicionar_item(tabela):
 
+    def entry():
+            global pdf_filename
+            pdf_filename = filedialog.askopenfilename(title="Selecione o arquivo MAPA PDF",
+                                                      filetypes=(("pdf files", "*.pdf"),))
+            salvar_arquivo(pdf_filename)
+            print("return")
+            return
 
+    entry()
+    print("return2")
+    print(entry)
+
+    print("print do adicionar itens11 ")
+
+    global id_item
+    print("print do adicionar itens ", cnpj_list[id_item-1], razao_list[id_item-1],data_list[id_item-1])
+    # # Adiciona os valores como uma nova linha na tabela
+
+    tabela.insert('', 'end', iid=id_item, text=str(id_item), values=(cnpj_list[id_item - 1], razao_list[id_item - 1], data_list[id_item - 1]))
