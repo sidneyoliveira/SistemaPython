@@ -30,19 +30,19 @@ def on_input_change(var_name, input_obj):
 
 
 # Definindo a função que será executada quando o botão for clicado
-def input_pdf(var_name):
+def input_pdf(var_name, tabela):
     def entry(event):
         global pdf_filename
         pdf_filename = filedialog.askopenfilename(title="Selecione o arquivo MAPA PDF",
                                                   filetypes=(("pdf files", "*.pdf"),))
-        salvar_arquivo(pdf_filename)
+        salvar_arquivo(pdf_filename, tabela)
 
     return entry
 
 def exibir_alerta(titulo, mensagem, tipo_icone):
     ctypes.windll.user32.MessageBoxW(0, mensagem, titulo, tipo_icone)
 
-def salvar_arquivo(dados):
+def salvar_arquivo(dados,tabela):
 
     if dados:
         print(dados)
@@ -101,6 +101,10 @@ def salvar_arquivo(dados):
         cnpj_list[id_item-1] = cnpj
         razao_list[id_item-1] = razao
         data_list[id_item-1] = data
+
+
+
+
 
     else:
         # exibir_alerta("Atenção", "Mapa não Importado", 0x30)
@@ -194,4 +198,6 @@ def salvar_word():
         print(caminho_completo)
         doc.save(caminho_completo)
         os.startfile(caminho_completo)
+
+
 

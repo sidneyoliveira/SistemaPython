@@ -125,7 +125,12 @@ icon_pdf = PhotoImage(file="img/pdf_icon.png").subsample(15)
 
 botao_pdf = customtkinter.CTkButton(root, width=200, text="Adiconar Cotação",font=('Helvetica', 14, 'bold'), image=icon_pdf, compound="left", )
 botao_pdf.grid(column=1, row=3, padx=10, pady=10, sticky=W)
-botao_pdf.bind("<Button-1>", input_pdf("botao_pdf"))
+dados1 = botao_pdf.bind("<Button-1>", input_pdf("botao_pdf"))
+
+def adicionar_item(tabela):
+    # Adiciona os valores como uma nova linha na tabela
+    tabela.insert('', 'end', values=(cnpj, razao, data))
+
 # botao_pdf.bind("<FocusOut>", on_input_change("botao_pdf", botao_pdf))
 
 icon_docx = PhotoImage(file="img/word_icon.png").subsample(15)
