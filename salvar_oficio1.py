@@ -85,12 +85,12 @@ def salvar_arquivo(dados):
         descricao = descricao.replace('  ', ' ')
         print(descricao + "\n")
 
-        cnpj_indice = linhas.index("Validade da proposta: 60 dias ")
+        cnpj_indice = linhas.index("\x0c")
         print(cnpj_indice)
-        print(linhas[cnpj_indice+3])
+        print(linhas[cnpj_indice-20])
 
-        cnpj = linhas[cnpj_indice+3].split(": ")[1]
-        razao = linhas[cnpj_indice+2].split(": ")[1]
+        cnpj = linhas[cnpj_indice-19].split(": ")[1]
+        razao = linhas[cnpj_indice-20].split(": ")[1]
 
         print(f'cnpj:{cnpj}')
         print(f'razao:{razao}')
