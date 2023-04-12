@@ -136,6 +136,11 @@
     "hover_color": ["gray75", "gray28"],
     "text_color": ["gray14", "gray84"]
   },
+  "CTkTabview": {
+    "fg_color": ["#0b6ca1", "#0b6ca1"],
+    "hover_color": ["gray75", "gray28"],
+    "text_color": ["gray14", "gray84"]
+  },
   "CTkFont": {
     "macOS": {
       "family": "SF Display",

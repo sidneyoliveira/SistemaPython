@@ -1,13 +1,9 @@
-import customtkinter
-from tkinter import ttk
-
 from salvar_oficio1 import *
 import tkinter as tk
-from ttkthemes import themed_style
-from tkcalendar import DateEntry
-from ttkthemes import ThemedTk
 from ttkthemes import ThemedStyle
-
+import customtkinter
+from tkinter import *
+from PIL import Image, ImageTk
 
 cnpj1 = ""
 cnpj2 = ""'1'
@@ -72,7 +68,7 @@ root.config(bg='#f1f1f1')
 style = ThemedStyle(root)
 style.set_theme("winxpblue")
 style.configure('Treeview', font=('Helvetica', 9, 'bold'),padding=(0, 5), rowheight=15, collunsheight=15, foreground='#555555', background='#E1E1E1')
-style.configure('Treeview.Heading', background='#0b6ba1', padding=(0, 5), foreground='white', focus = "red", font=('Helvetica', 10, 'bold'))
+style.configure('Treeview.Heading', background='#0b6ba1', padding=(0, 5), foreground='white', font=('Helvetica', 10, 'bold'))
 style.map("Treeview.Heading", background=[("active", "#0e557d")])
 style.layout('Treeview', [('Treeview.treearea', {'sticky': 'nswe'})])
 
@@ -112,11 +108,14 @@ botao_pdf = customtkinter.CTkButton(root, width=200, text="Adiconar Cotação",f
 botao_pdf.grid(column=1, row=3, padx=10, pady=10, sticky=W)
 botao_pdf.bind("<Button-1>", lambda event: adicionar_item(tabela))
 
+icon_docx = customtkinter.CTkImage(light_image=Image.open("img/word_icon.png"),
+                                  dark_image=Image.open("img/word_icon.png"),
+                                  size=(40, 40))
 
-icon_docx = PhotoImage(file="img/word_icon.png").subsample(15)
 # Criando a entrada e o botão personalizado
 salvar_docx = customtkinter.CTkButton(root, width=200, text="Salvar Word", font=('Helvetica', 14, 'bold'), image=icon_docx, compound="left",
                                             command=salvar_word)
 salvar_docx.grid(column=1, row=3, padx=10, pady=10, sticky=E)
 
 root.mainloop()
+
