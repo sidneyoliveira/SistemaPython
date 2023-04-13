@@ -29,24 +29,6 @@ def return_value(self, value):
     # self.master.destroy()
 
 
-def editar_item(event):
-    # Obtém o item selecionado na tabela
-    item = tabela.selection()[0]
-
-    # Obtém os valores do item selecionado
-    cnpj = tabela.item(item, 'values')[0]
-    razao_social = tabela.item(item, 'values')[1]
-    data_coleta = tabela.item(item, 'values')[2]
-    # Preenche os campos do formulário com os valores do item selecionado
-    cnpj_entry.delete(0, 'end')
-    cnpj_entry.insert(0, cnpj)
-
-    razao_social_entry.delete(0, 'end')
-    razao_social_entry.insert(0, razao_social)
-
-    data_coleta_entry.delete(0, 'end')
-    data_coleta_entry.insert(0, data_coleta)
-
 def remover_item(event):
     # Obtém o item selecionado na tabela
     item = tabela.selection()[0]
@@ -108,12 +90,12 @@ botao_pdf = customtkinter.CTkButton(root, width=200, text="Adiconar Cotação",f
 botao_pdf.grid(column=1, row=3, padx=10, pady=10, sticky=W)
 botao_pdf.bind("<Button-1>", lambda event: adicionar_item(tabela))
 
-icon_docx = customtkinter.CTkImage(light_image=Image.open("img/word_icon.png"),
-                                  dark_image=Image.open("img/word_icon.png"),
-                                  size=(40, 40))
+# icon_docx = customtkinter.CTkImage(light_image=Image.open("img/word_icon.png"),
+#                                   dark_image=Image.open("img/word_icon.png"),
+#                                   size=(40, 40))
 
 # Criando a entrada e o botão personalizado
-salvar_docx = customtkinter.CTkButton(root, width=200, text="Salvar Word", font=('Helvetica', 14, 'bold'), image=icon_docx, compound="left",
+salvar_docx = customtkinter.CTkButton(root, width=200, text="Salvar Word", font=('Helvetica', 14, 'bold'), compound="left",
                                             command=salvar_word)
 salvar_docx.grid(column=1, row=3, padx=10, pady=10, sticky=E)
 
