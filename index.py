@@ -14,7 +14,7 @@ customtkinter.set_appearance_mode("light")
 customtkinter.set_default_color_theme('theme/light.json')
 
 index = customtkinter.CTk()
-index.title("Sistema Python")
+index.title("Departamento de Compras")
 
 index.geometry('640x360+300+200')
 

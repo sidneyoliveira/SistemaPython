@@ -2,8 +2,8 @@ from salvar_oficio1 import *
 import tkinter as tk
 from ttkthemes import ThemedStyle
 import customtkinter
-from tkinter import *
 from PIL import Image, ImageTk
+from tkinter import *
 
 cnpj1 = ""
 cnpj2 = ""'1'
@@ -60,7 +60,7 @@ customtkinter.set_default_color_theme('theme/light.json')
 
 root = customtkinter.CTk()
 root.geometry("600x300")
-root.title("Input Demo")
+root.title("Expedir Oficios")
 root.config(bg='#f1f1f1')
 
 
