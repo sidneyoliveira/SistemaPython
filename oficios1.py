@@ -3,7 +3,7 @@ import tkinter as tk
 from ttkthemes import ThemedStyle
 import customtkinter
 from PIL import Image, ImageTk
-from tkinter import *
+
 
 cnpj1 = ""
 cnpj2 = ""'1'
@@ -41,9 +41,9 @@ customtkinter.set_appearance_mode("light")
 customtkinter.set_default_color_theme('theme/light.json')
 
 root = customtkinter.CTk()
-root.geometry("600x300")
+root.geometry("630x320+350+150")
 root.title("Expedir Oficios")
-root.config(bg='#f1f1f1')
+root.config(bg='#fafafa')
 
 
 
@@ -67,7 +67,7 @@ tabela.heading('#0', text='ID')
 tabela.heading('CNPJ', text='CNPJ')
 tabela.heading('Razão Social', text='Razão Social')
 tabela.heading('Data', text='Data')
-tabela.grid(column=1, row=1, padx=10, pady=10)
+tabela.grid(column=0, row=1, padx=(30,0), pady=(20, 0))
 
 
 # Define as tags para as linhas pares e ímpares
@@ -75,7 +75,22 @@ tabela.tag_configure('even', background='black')
 tabela.tag_configure('odd', background='black')
 
 
+setor_label = customtkinter.CTkLabel(root, font=('Helvetica', 14, 'bold'),
+                                     fg_color="#fafafa",
+                                     text_color="#0e557d",
+                                     text="DATA DE FECHAMENTO:")
+setor_label.grid( column=0, row=2, padx=(320,0), pady=5, sticky = "w")
 
+
+input_data = customtkinter.CTkEntry(root, placeholder_text="",
+                              width=100, height=20,
+                              border_width=2,
+                              border_color='#dddddd',
+                              corner_radius=2,
+                              )
+
+input_data.grid(column=0, row=2, padx=0, pady=0,sticky = "e" )
+input_data.bind("<KeyRelease>", on_input_change('input_data', input_data))
 
 root.item_id = 0
 
@@ -84,20 +99,20 @@ root.item_id = 0
 
 
 
-icon_pdf = PhotoImage(file="img/pdf_icon.png").subsample(15)
+icon_docx = customtkinter.CTkImage(light_image=Image.open("img/word_icon.png"),
+                                 dark_image=Image.open("img/word_icon.png"),
+                                 size=(40, 40))
 
-botao_pdf = customtkinter.CTkButton(root, width=200, text="Adiconar Cotação",font=('Helvetica', 14, 'bold'), image=icon_pdf, compound="left", )
-botao_pdf.grid(column=1, row=3, padx=10, pady=10, sticky=W)
+
+botao_pdf = customtkinter.CTkButton(root, width=200,corner_radius=3, text="Adiconar Cotação",font=('Helvetica', 14, 'bold'), image=icon_docx, compound="left", )
+botao_pdf.grid(column=0, row=3, padx=30, pady=10, sticky="W")
 botao_pdf.bind("<Button-1>", lambda event: adicionar_item(tabela))
 
-# icon_docx = customtkinter.CTkImage(light_image=Image.open("img/word_icon.png"),
-#                                   dark_image=Image.open("img/word_icon.png"),
-#                                   size=(40, 40))
 
 # Criando a entrada e o botão personalizado
-salvar_docx = customtkinter.CTkButton(root, width=200, text="Salvar Word", font=('Helvetica', 14, 'bold'), compound="left",
-                                            command=salvar_word)
-salvar_docx.grid(column=1, row=3, padx=10, pady=10, sticky=E)
+salvar_docx = customtkinter.CTkButton(root, width=200, text="Salvar Word", font=('Helvetica', 14, 'bold'), image=icon_docx, compound="left",
+                                            corner_radius=3, command=salvar_word)
+salvar_docx.grid(column=0, row=3, padx=0, pady=10, sticky="E")
 
 root.mainloop()
 

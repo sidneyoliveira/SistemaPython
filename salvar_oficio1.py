@@ -1,12 +1,8 @@
 import os
 import docx
-import requests
-from bs4 import BeautifulSoup
 from docx import Document
 from pdfminer.high_level import extract_text
 from tkinter import filedialog, ttk
-import customtkinter
-from tkinter import *
 global pdf_filename
 import ctypes
 
@@ -14,7 +10,7 @@ id_item = 0
 cnpj_list = ["", "", ""]
 razao_list = ["", "", ""]
 data_list =  ["", "", ""]
-
+input_data = ""
 
 
 ICON_ERROR = 0x10
@@ -25,6 +21,7 @@ ICON_INFORMATION = 0x40
 def on_input_change(var_name, input_obj):
     def on_change(event):
             globals()[var_name] = input_obj.get()
+            print(globals()[var_name])
 
     return on_change
 
@@ -110,6 +107,7 @@ def salvar_arquivo(dados):
     print(cnpj_list)
     print(razao_list)
     print(data_list)
+
     # Função para extrair dados do cnpj
     numoficio = f'{dia}' + f'{mes}' + '-0001.' + f'{ano}'
 
@@ -124,12 +122,24 @@ def salvar_arquivo(dados):
 
 def salvar_word():
 
-    doc = Document('oficio1.docx')
+    doc = Document('padraos/oficio1.docx')
     tabela = doc.tables[0]
     global itens
+    global input_data
+
+    on_input_change('input_data', input_data)
+    data: str = input_data
+    print(data)
+    dia = data.split('/')[0]
+    mes = data.split('/')[1]
+    ano = data.split('/')[2]
+    print(dia, mes, ano)
+    numoficio = f'{dia}' + f'{mes}' + '-0001.' + f'{ano}'
+
+
     num = itens[0]
-    numoficio = itens[1]
-    data = itens[2]
+
+    data = input_data
     titulo = itens[3]
     descricao = itens[4]
 

@@ -131,9 +131,9 @@ customtkinter.set_appearance_mode("light")
 customtkinter.set_default_color_theme('theme/light.json')
 
 root = customtkinter.CTk()
-root.geometry('450x300+300+200')
+root.geometry('450x350+450+150')
 root.title("Requisição de Água - Setor de Compras")
-root.config(bg='#f1f1f1')
+root.config(bg='#fafafa')
 root.columnconfigure(0, minsize=100)
 
 style = ThemedStyle(root)
@@ -145,7 +145,7 @@ style.configure('Treeview.Heading', background='#0b6ba1', padding=(0, 5), foregr
 style.map("Treeview.Heading", background=[("active", "#0e557d")])
 style.layout('Treeview', [('Treeview.treearea', {'sticky': 'nswe'})])
 
-titulo = customtkinter.CTkLabel(root, font=('Helvetica', 16, 'bold'), text_color="#0e557d", text="REQUISIÇÃO - ÁGUA")
+titulo = customtkinter.CTkLabel(root, font=('Helvetica', 16, 'bold'), fg_color="#fafafa", text_color="#0e557d", text="REQUISIÇÃO - ÁGUA")
 titulo.grid(column=0, row=0, padx=50, pady=10, sticky="s")
 
 # Criando a tabela
@@ -185,7 +185,7 @@ input_quant1 = customtkinter.CTkEntry(frame, placeholder_text="0",
 input_quant1.insert(0, "0")  # define o valor padrão como "0"
 
 input_quant1.grid(column=0, row=1, padx=10, pady=0, sticky='w')
-# input_quant1.bind("<FocusOut>", on_input_change(0, input_quant1))
+# input_quant1.bind("<KeyRelease>", on_input_change(0, input_quant1))
 
 input_quant2 = customtkinter.CTkEntry(frame, placeholder_text="0",
                                       width=60, height=15,
@@ -197,7 +197,7 @@ input_quant2 = customtkinter.CTkEntry(frame, placeholder_text="0",
 input_quant2.insert(0, "0")  # define o valor padrão como "0"
 
 input_quant2.grid(column=0, row=2, padx=10, pady=0, sticky='w')
-# input_quant2.bind("<FocusOut>", on_input_change(1, input_quant2))
+# input_quant2.bind("<KeyRelease>", on_input_change(1, input_quant2))
 
 input_quant3 = customtkinter.CTkEntry(frame, placeholder_text="0",
                                       width=60, height=15,
@@ -235,10 +235,10 @@ tabela_itens.insert('', 'end', text='3', values=('VASILHAME DE ÁGUA - 20L', '')
 tabela_itens.tag_configure('even', background='black')
 tabela_itens.tag_configure('odd', background='black')
 
-setor_label = customtkinter.CTkLabel(root, text="SETOR:")
+setor_label = customtkinter.CTkLabel(root, font=('Helvetica', 14, 'bold'), fg_color="#fafafa", text_color="#0e557d", text="SETOR DA REQUISIÇÃO:")
 setor_label.grid(row=5, column=0, padx=50, pady=(10, 0), sticky = "nw")
 
-setor_optionemenu = customtkinter.CTkOptionMenu(root, values=["ALMOXARIFADO", "GUARDA", "RAIO"],
+setor_optionemenu = customtkinter.CTkOptionMenu(root, values=["ALMOXARIFADO", "GUARDA", "RAIO", "TRIBUTOS"],
                                                 corner_radius=0
                                                 )
 setor_optionemenu.grid(row=5, column=0, padx=50, pady=(10, 10), sticky = "ne")
@@ -252,7 +252,6 @@ salvar_xls = customtkinter.CTkButton(root, width=150, text="Salvar EXEL", font=(
                                       image=icon_docx, compound="left", corner_radius=0,
                                       command=salvar_xls)
 salvar_xls.grid(column=0, row=6, padx=50, pady=20, sticky="w")
-
 
 
 salvar_docx = customtkinter.CTkButton(root, width=150, text="Salvar PDF", font=('Helvetica', 14, 'bold'),
