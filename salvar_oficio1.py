@@ -5,6 +5,9 @@ from pdfminer.high_level import extract_text
 from tkinter import filedialog, ttk
 global pdf_filename
 import ctypes
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+import time
 
 id_item = 0
 cnpj_list = ["", "", ""]
@@ -230,3 +233,5 @@ def adicionar_item(tabela):
     # # Adiciona os valores como uma nova linha na tabela
 
     tabela.insert('', 'end', iid=id_item, text=str(id_item), values=(cnpj_list[id_item - 1], razao_list[id_item - 1], data_list[id_item - 1]))
+
+

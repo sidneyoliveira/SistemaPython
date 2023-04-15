@@ -114,5 +114,7 @@ salvar_docx = customtkinter.CTkButton(root, width=200, text="Salvar Word", font=
                                             corner_radius=3, command=salvar_word)
 salvar_docx.grid(column=0, row=3, padx=0, pady=10, sticky="E")
 
+
+
 root.mainloop()
 

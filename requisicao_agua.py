@@ -2,6 +2,10 @@ import os
 import tkinter as tk
 from tkinter import filedialog, ttk
 
+import requests
+from bs4 import BeautifulSoup
+from selenium.webdriver.chrome import webdriver
+from selenium.webdriver.common.by import By
 from ttkthemes import ThemedStyle
 from PIL import Image, ImageTk
 import customtkinter
@@ -9,8 +13,16 @@ import ctypes
 import openpyxl
 import datetime
 import win32com.client as win32
-
-
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+import time
+import pyautogui
+import webbrowser
+import win32gui
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
+import time
 
 # Variáveis globais
 global pdf_filename
@@ -113,6 +125,74 @@ def salvar_pdf():
 
 print(id_item)
 
+def enviar_whats():
+
+    global dados
+
+    windows = []
+    def enum_windows(hwnd, result):
+        result.append((hwnd, win32gui.GetWindowText(hwnd)))
+
+    win32gui.EnumWindows(enum_windows, windows)
+
+    # Busca a janela do Google Chrome pelo título
+    chrome_window = None
+    for hwnd, title in windows:
+        if "Google Chrome" in title:
+            chrome_window = hwnd
+
+            break
+
+    if chrome_window:
+
+        chrome_window = pyautogui.Window(chrome_window)
+        print(chrome_window)
+
+        chrome_window.activate()
+
+        # Se não houver nenhuma aba do WhatsApp Web aberta, abre uma nova aba e acessa o WhatsApp Web
+        pyautogui.hotkey('ctrl', 't')
+        time.sleep(1)
+        link = 'https://web.whatsapp.com\n'
+        pyautogui.typewrite(link)
+        time.sleep(5)
+        pyautogui.press(['tab'] * 5)
+        pyautogui.typewrite("Relatorios\n")
+
+        time.sleep(1)
+
+        print(link)
+        link = 'Por favor:'
+        pyautogui.typewrite(link)
+        if int(dados[2]) > 0:
+            pyautogui.hotkey("shift", "enter")
+            pyautogui.typewrite(f'{dados[2]} Garrafas de 500ml')
+        if int(dados[3]) > 0:
+            pyautogui.hotkey("shift", "enter")
+            pyautogui.typewrite(f'{dados[3]} Garrafoes de 20L,')
+        if int(dados[4]) > 0:
+            pyautogui.hotkey("shift", "enter")
+            pyautogui.typewrite(f'{dados[4]} Vasilhames de 20L')
+
+        pyautogui.press('enter')
+
+        time.sleep(1)
+        pyautogui.press(['tab'] * 14 + ['enter'] + ['up'] * 4 + ['enter'])
+        #
+        dados[6] = dados[6].replace('\\', '/')
+        dados[6] = 'file:///' + dados[6].replace(' ', '%20').replace('.xlsx', '.pdf')
+        print(dados[6])
+        time.sleep(1)
+        pyautogui.typewrite(dados[6])
+        time.sleep(1)
+        pyautogui.press(['enter'] )
+        time.sleep(1)
+        pyautogui.press(['enter'])
+
+
+    else:
+        print("Janela do Google Chrome não encontrada.")
+
 item_id = 0
 
 class CustomButton(customtkinter.CTkButton):
@@ -131,7 +211,7 @@ customtkinter.set_appearance_mode("light")
 customtkinter.set_default_color_theme('theme/light.json')
 
 root = customtkinter.CTk()
-root.geometry('450x350+450+150')
+root.geometry('450x400+450+150')
 root.title("Requisição de Água - Setor de Compras")
 root.config(bg='#fafafa')
 root.columnconfigure(0, minsize=100)
@@ -248,15 +328,22 @@ icon_docx = customtkinter.CTkImage(light_image=Image.open("img/word_icon.png"),
                                    size=(40, 40))
 
 # Criando a entrada e o botão personalizado
-salvar_xls = customtkinter.CTkButton(root, width=150, text="Salvar EXEL", font=('Helvetica', 14, 'bold'),
-                                      image=icon_docx, compound="left", corner_radius=0,
+salvar_xls = customtkinter.CTkButton(root, width=100, text="Salvar EXEL", font=('Helvetica', 14, 'bold'),
+                                      image=icon_docx, compound="left", corner_radius=3,
                                       command=salvar_xls)
 salvar_xls.grid(column=0, row=6, padx=50, pady=20, sticky="w")
 
 
-salvar_docx = customtkinter.CTkButton(root, width=150, text="Salvar PDF", font=('Helvetica', 14, 'bold'),
-                                      image=icon_docx, compound="left", corner_radius=0,
+salvar_docx = customtkinter.CTkButton(root, width=100, text="Salvar PDF", font=('Helvetica', 14, 'bold'),
+                                      image=icon_docx, compound="left", corner_radius=3,
                                       command=salvar_pdf)
 salvar_docx.grid(column=0, row=6, padx=50, pady=20, sticky="e")
+
+
+enviar_whats = customtkinter.CTkButton(root, width=100, text="Enviar Mensagem", font=('Helvetica', 14, 'bold'), image=icon_docx, compound="left",
+                                            corner_radius=3, command=enviar_whats)
+enviar_whats.grid(column=0, row=7, padx=0, pady=10)
+
+
 
 root.mainloop()
