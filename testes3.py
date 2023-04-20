@@ -51,9 +51,11 @@ for i in range(len(cidade)):
             # print(soup.prettify())
             result = str(soup.find("meta", attrs={"name": "description"})).lower()
             print(result)
-            result = result.split(" seguidores")
-            result = result[0].replace('<meta content="', '')
+            result = result.split(" curtidas")
             print(result)
+            result = result[0].split(" ")
+            print(result)
+            print(result[3])
 
     else:
         resultados.append(" ")
